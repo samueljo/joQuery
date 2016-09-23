@@ -141,9 +141,7 @@
 	                      new Coord(Math.floor(board.size / 2),
 	                                Math.floor(board.size / 2) + 1),
 	                      new Coord(Math.floor(board.size / 2),
-	                                Math.floor(board.size / 2) + 2),
-	                      new Coord(Math.floor(board.size / 2),
-	                                Math.floor(board.size / 2) + 3)];
+	                                Math.floor(board.size / 2) + 2)];
 	  }
 	
 	  move () {
@@ -199,13 +197,6 @@
 	    } else {
 	      return false;
 	    }
-	  }
-	
-	  randomCoord (boardSize) {
-	    min = Math.ceil(0);
-	    max = Math.floor(boardSize);
-	    const xPos = Math.floor(Math.random() * (max - min)) + min;
-	    const yPos = Math.floor(Math.random() * (max - min)) + min;
 	  }
 	}
 	

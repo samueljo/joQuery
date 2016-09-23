@@ -8,9 +8,7 @@ class Snake {
                       new Coord(Math.floor(board.size / 2),
                                 Math.floor(board.size / 2) + 1),
                       new Coord(Math.floor(board.size / 2),
-                                Math.floor(board.size / 2) + 2),
-                      new Coord(Math.floor(board.size / 2),
-                                Math.floor(board.size / 2) + 3)];
+                                Math.floor(board.size / 2) + 2)];
   }
 
   move () {
