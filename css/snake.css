@@ -13,22 +13,24 @@ html, body, ul, li, h1 {
 }
 
 body {
-  background-color: antiquewhite;
+  background-color: white;
 }
 
 .grid {
   height:410px;
   width: 410px;
-  background-image: url("../assets/grass.jpg");
-  background-size: cover;
   margin: 0 auto;
   display: block;
+  /*perspective: 600px;
+  perspective-origin: center;*/
 }
 
 h1 {
   font-size: 64px;
-  font-family: fantasy;
+  font-family: sans-serif;;
+  font-weight: 700;
   text-align: center;
+  margin: 50px;
 }
 
 p {
@@ -43,7 +45,11 @@ ul {
   list-style: none;
   width: 400px;
   height: 400px;
+  background-color: tan;
+  /*background-image: url("../assets/grass.jpg");
+  background-size: cover;*/
   border: 5px solid black;
+  /*transform: rotateX(45deg)*/
 }
 
 li {
@@ -51,6 +57,7 @@ li {
   width: 20px;
   height: 20px;
   background: transparent;
+  /*transform: rotateX(45deg)*/
 }
 
 .snake {

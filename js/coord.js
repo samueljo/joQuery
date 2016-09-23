@@ -7,7 +7,20 @@ class Coord {
   plus (otherCoord) {
     const newX = this.xPos + otherCoord.xPos;
     const newY = this.yPos + otherCoord.yPos;
-    return new Coord(newX, newY);
+    const newCoord = new Coord(newX, newY);
+    if (newCoord.isValid()) {
+      return newCoord;
+    } else {
+      window.alert("You lose!");
+    }
+  }
+
+  isValid () {
+    if (this.xPos < 0 || this.yPos < 0 || this.xPos > 19 || this.yPos > 19) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   equals (otherCoord) {
