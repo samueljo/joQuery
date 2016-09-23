@@ -67,7 +67,7 @@
 	    $(window).keydown(function(e) {
 	      this.handleKeyEvent(e);
 	    }.bind(this));
-	    setInterval(this.step.bind(this), 400);
+	    setInterval(this.step.bind(this), 200);
 	  }
 	
 	  handleKeyEvent (e) {
