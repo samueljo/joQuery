@@ -9,7 +9,7 @@ class View {
     $(window).keydown(function(e) {
       this.handleKeyEvent(e);
     }.bind(this));
-    setInterval(this.step.bind(this), 200);
+    setInterval(this.step.bind(this), 100);
   }
 
   handleKeyEvent (e) {

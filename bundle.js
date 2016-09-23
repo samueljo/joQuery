@@ -67,7 +67,7 @@
 	    $(window).keydown(function(e) {
 	      this.handleKeyEvent(e);
 	    }.bind(this));
-	    setInterval(this.step.bind(this), 200);
+	    setInterval(this.step.bind(this), 100);
 	  }
 	
 	  handleKeyEvent (e) {
@@ -147,13 +147,21 @@
 	  }
 	
 	  move () {
-	    const incCoord = Snake.DIRS[this.direction];
-	    this.segments.unshift(this.segments[0].plus(incCoord));
+	    this.grow();
 	    this.segments.pop();
 	  }
 	
 	  turn (newDirection) {
-	    this.direction = newDirection;
+	    if (Snake.DIRS[this.direction].isOpposite(Snake.DIRS[newDirection])) {
+	      this.direction = this.direction;
+	    } else {
+	      this.direction = newDirection;
+	    }
+	  }
+	
+	  grow () {
+	    const incCoord = Snake.DIRS[this.direction];
+	    this.segments.unshift(this.segments[0].plus(incCoord));
 	  }
 	}
 	
@@ -185,8 +193,19 @@
 	    return ((this.xPos === otherCoord.xPos) && (this.yPos === otherCoord.yPos));
 	  }
 	
-	  isOpposite () {
+	  isOpposite (otherCoord) {
+	    if (otherCoord.xPos + this.xPos === 0 && otherCoord.yPos + this.yPos === 0) {
+	      return true;
+	    } else {
+	      return false;
+	    }
+	  }
 	
+	  randomCoord (boardSize) {
+	    min = Math.ceil(0);
+	    max = Math.floor(boardSize);
+	    const xPos = Math.floor(Math.random() * (max - min)) + min;
+	    const yPos = Math.floor(Math.random() * (max - min)) + min;
 	  }
 	}
 	

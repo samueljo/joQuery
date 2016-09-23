@@ -14,8 +14,19 @@ class Coord {
     return ((this.xPos === otherCoord.xPos) && (this.yPos === otherCoord.yPos));
   }
 
-  isOpposite () {
+  isOpposite (otherCoord) {
+    if (otherCoord.xPos + this.xPos === 0 && otherCoord.yPos + this.yPos === 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
+  randomCoord (boardSize) {
+    min = Math.ceil(0);
+    max = Math.floor(boardSize);
+    const xPos = Math.floor(Math.random() * (max - min)) + min;
+    const yPos = Math.floor(Math.random() * (max - min)) + min;
   }
 }
 
