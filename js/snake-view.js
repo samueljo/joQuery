@@ -29,6 +29,7 @@ class View {
 
   step () {
     this.board.snake.move();
+    this.board.snake.grow();
     this.drawBoard();
   }
 

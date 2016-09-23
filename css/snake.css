@@ -16,6 +16,15 @@ body {
   background-color: antiquewhite;
 }
 
+.grid {
+  height:410px;
+  width: 410px;
+  background-image: url("../assets/grass.jpg");
+  background-size: cover;
+  margin: 0 auto;
+  display: block;
+}
+
 h1 {
   font-size: 64px;
   font-family: fantasy;
@@ -41,9 +50,9 @@ li {
   float: left;
   width: 20px;
   height: 20px;
-  background: white;
+  background: transparent;
 }
 
 .snake {
-  background: green;
+  background: red;
 }
