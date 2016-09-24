@@ -64,14 +64,11 @@
 	    this.board = new Board(20);
 	    this.setupBoard();
 	
-	    $(window).keydown(function(e) {
-	      this.handleKeyEvent(e);
-	    }.bind(this));
-	
 	    this.intervalID = setInterval(this.step.bind(this), 100);
 	  }
 	
 	  handleKeyEvent (e) {
+	    $(window).off();
 	    const direction = e.keyCode;
 	    this.board.snake.turn(View.MOVES[direction]);
 	  }
@@ -91,6 +88,9 @@
 	      window.alert('You lost!');
 	      clearInterval(this.intervalID);
 	    } else {
+	      $(window).keydown(function(e) {
+	        this.handleKeyEvent(e);
+	      }.bind(this));
 	      this.board.snake.move();
 	      this.board.eatsApple();
 	      this.drawBoard();
