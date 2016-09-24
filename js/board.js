@@ -28,7 +28,9 @@ class Board {
     if (this.snake.segments[0].equals(this.apple.coord)) {
       this.snake.grow();
       this.addApple();
+      return true;
     }
+    return false;
   }
 }
 

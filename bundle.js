@@ -49,6 +49,9 @@
 	$( () => {
 	  const view = new View($('.grid'));
 	  view.drawBoard();
+	  $(window).keydown(function(e) {
+	    view.handleKeyEvent(e);
+	  });
 	});
 
 
@@ -62,15 +65,31 @@
 	  constructor ($el) {
 	    this.$el = $el;
 	    this.board = new Board(20);
+	    this.points = 0;
 	    this.setupBoard();
 	
-	    this.intervalID = setInterval(this.step.bind(this), 100);
+	    this.playing = false;
 	  }
 	
 	  handleKeyEvent (e) {
+	    console.log(this.intervalID);
 	    $(window).off();
-	    const direction = e.keyCode;
-	    this.board.snake.turn(View.MOVES[direction]);
+	    if (e.keyCode === 32 && this.playing) {
+	      this.playing = false;
+	      console.log("pause");
+	      clearInterval(this.intervalID);
+	    } else if (e.keyCode === 32 && !this.playing) {
+	      console.log("resume");
+	      this.playing = true;
+	      this.intervalID = setInterval(this.step.bind(this), 100);
+	      return;
+	    } else if (Object.keys(View.MOVES).includes(`${e.keyCode}`)) {
+	      const direction = e.keyCode;
+	      this.board.snake.turn(View.MOVES[direction]);
+	    }
+	    $(window).keydown(function(e) {
+	      this.handleKeyEvent(e);
+	    }.bind(this));
 	  }
 	
 	  setupBoard () {
@@ -81,18 +100,25 @@
 	    for (let i = 0; i < this.board.size * this.board.size; i++) {
 	      $board.append($('<li>').addClass('tile').addClass('empty'));
 	    }
+	    const points = this.points;
+	    const $points = $('<h2>');
+	    $('.grid').append($points);
+	    $points.addClass('points');
+	    $points.text(`${points}`);
 	  }
 	
 	  step () {
 	    if (this.lost()) {
-	      window.alert('You lost!');
 	      clearInterval(this.intervalID);
+	      window.alert('You lost!');
 	    } else {
 	      $(window).keydown(function(e) {
 	        this.handleKeyEvent(e);
 	      }.bind(this));
 	      this.board.snake.move();
-	      this.board.eatsApple();
+	      if (this.board.eatsApple()) {
+	        this.points += 10;
+	      }
 	      this.drawBoard();
 	    }
 	  }
@@ -110,8 +136,12 @@
 	  }
 	
 	  drawBoard () {
+	    const points = this.points;
+	    $('.points').text(`${points}`);
+	
 	    $('li').removeClass();
 	    const snakeSegs = this.board.snake.segments;
+	
 	    const appleIdx = this.getLiIndex(this.board.apple.coord);
 	    $($('li').get(appleIdx)).addClass('apple');
 	
@@ -168,7 +198,9 @@
 	    if (this.snake.segments[0].equals(this.apple.coord)) {
 	      this.snake.grow();
 	      this.addApple();
+	      return true;
 	    }
+	    return false;
 	  }
 	}
 	
