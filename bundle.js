@@ -104,16 +104,16 @@
 	    }
 	  }
 	
+	  getLiIndex (coord) {
+	    return coord.yPos * this.board.size + coord.xPos;
+	  }
+	
 	  drawBoard () {
 	    $('li').removeClass();
 	    const snakeSegs = this.board.snake.segments;
 	
 	    for (let i = 0; i < snakeSegs.length; i++) {
-	      let snakeX = snakeSegs[i].xPos;
-	      let snakeY = snakeSegs[i].yPos;
-	
-	      let snakeIdx = snakeY * this.board.size + snakeX;
-	
+	      let snakeIdx = this.getLiIndex(snakeSegs[i]);
 	      let snakeLi = $($('li').get(snakeIdx));
 	
 	      if (i === 0) {
@@ -123,6 +123,26 @@
 	      snakeLi.addClass('snake');
 	    }
 	  }
+	
+	  // isSnake (coord) {
+	  //   const $li = $($('li').get(Coord.getLiIndex(coord)));
+	  //
+	  //   if ($li.classList.includes("snake")) {
+	  //     return true;
+	  //   } else {
+	  //     return false;
+	  //   }
+	  // }
+	  //
+	  // isApple (coord) {
+	  //   const $li = $($('li').get(Coord.getLiIndex(coord)));
+	  //
+	  //   if ($li.classList.includes("apple")) {
+	  //     return true;
+	  //   } else {
+	  //     return false;
+	  //   }
+	  // }
 	}
 	
 	View.MOVES = { 37: "W", 38: "N", 39: "E", 40: "S" };
@@ -194,7 +214,7 @@
 	
 	  hitWall () {
 	    const newCoord = this.nextMoveCoord();
-	    debugger
+	
 	    if (newCoord.xPos < 0 || newCoord.yPos < 0 || newCoord.xPos > 19 || newCoord.yPos > 19) {
 	      return true;
 	    } else {
@@ -230,9 +250,10 @@
 /***/ function(module, exports) {
 
 	class Coord {
-	  constructor (xPos, yPos) {
+	  constructor (xPos, yPos, boardSize) {
 	    this.xPos = xPos;
 	    this.yPos = yPos;
+	    this.boardSize = boardSize;
 	  }
 	
 	  plus (otherCoord) {

@@ -1,7 +1,8 @@
 class Coord {
-  constructor (xPos, yPos) {
+  constructor (xPos, yPos, boardSize) {
     this.xPos = xPos;
     this.yPos = yPos;
+    this.boardSize = boardSize;
   }
 
   plus (otherCoord) {
