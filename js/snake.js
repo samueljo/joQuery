@@ -8,7 +8,11 @@ class Snake {
                       new Coord(Math.floor(board.size / 2),
                                 Math.floor(board.size / 2) + 1),
                       new Coord(Math.floor(board.size / 2),
-                                Math.floor(board.size / 2) + 2)];
+                                Math.floor(board.size / 2) + 2),
+                      new Coord(Math.floor(board.size / 2),
+                                Math.floor(board.size / 2) + 3),
+                      new Coord(Math.floor(board.size / 2),
+                                Math.floor(board.size / 2) + 4)];
     this.setHead();
   }
 
@@ -26,13 +30,32 @@ class Snake {
     }
   }
 
-  nextMove () {
+  hitSelf () {
+    for (let i = 0; i < this.segments.length; i++) {
+      if (this.segments[i].equals(this.nextMoveCoord())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  hitWall () {
+    const newCoord = this.nextMoveCoord();
+    debugger
+    if (newCoord.xPos < 0 || newCoord.yPos < 0 || newCoord.xPos > 19 || newCoord.yPos > 19) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  nextMoveCoord () {
     const incCoord = Snake.DIRS[this.direction];
     return this.segments[0].plus(incCoord);
   }
 
   grow () {
-    this.segments.unshift(this.nextMove());
+    this.segments.unshift(this.nextMoveCoord());
   }
 
   setHead () {

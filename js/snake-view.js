@@ -9,7 +9,8 @@ class View {
     $(window).keydown(function(e) {
       this.handleKeyEvent(e);
     }.bind(this));
-    setInterval(this.step.bind(this), 100);
+
+    this.intervalID = setInterval(this.step.bind(this), 100);
   }
 
   handleKeyEvent (e) {
@@ -28,8 +29,21 @@ class View {
   }
 
   step () {
-    this.board.snake.move();
-    this.drawBoard();
+    if (this.lost()) {
+      window.alert('You lost!');
+      clearInterval(this.intervalID);
+    } else {
+      this.board.snake.move();
+      this.drawBoard();
+    }
+  }
+
+  lost() {
+    if (this.board.snake.hitSelf() || this.board.snake.hitWall()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   drawBoard () {
@@ -48,7 +62,6 @@ class View {
         snakeLi.addClass('snake-head');
       }
 
-      debugger
       snakeLi.addClass('snake');
     }
   }

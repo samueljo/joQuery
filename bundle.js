@@ -67,7 +67,8 @@
 	    $(window).keydown(function(e) {
 	      this.handleKeyEvent(e);
 	    }.bind(this));
-	    setInterval(this.step.bind(this), 100);
+	
+	    this.intervalID = setInterval(this.step.bind(this), 100);
 	  }
 	
 	  handleKeyEvent (e) {
@@ -86,8 +87,21 @@
 	  }
 	
 	  step () {
-	    this.board.snake.move();
-	    this.drawBoard();
+	    if (this.lost()) {
+	      window.alert('You lost!');
+	      clearInterval(this.intervalID);
+	    } else {
+	      this.board.snake.move();
+	      this.drawBoard();
+	    }
+	  }
+	
+	  lost() {
+	    if (this.board.snake.hitSelf() || this.board.snake.hitWall()) {
+	      return true;
+	    } else {
+	      return false;
+	    }
 	  }
 	
 	  drawBoard () {
@@ -106,7 +120,6 @@
 	        snakeLi.addClass('snake-head');
 	      }
 	
-	      debugger
 	      snakeLi.addClass('snake');
 	    }
 	  }
@@ -148,7 +161,11 @@
 	                      new Coord(Math.floor(board.size / 2),
 	                                Math.floor(board.size / 2) + 1),
 	                      new Coord(Math.floor(board.size / 2),
-	                                Math.floor(board.size / 2) + 2)];
+	                                Math.floor(board.size / 2) + 2),
+	                      new Coord(Math.floor(board.size / 2),
+	                                Math.floor(board.size / 2) + 3),
+	                      new Coord(Math.floor(board.size / 2),
+	                                Math.floor(board.size / 2) + 4)];
 	    this.setHead();
 	  }
 	
@@ -166,13 +183,32 @@
 	    }
 	  }
 	
-	  nextMove () {
+	  hitSelf () {
+	    for (let i = 0; i < this.segments.length; i++) {
+	      if (this.segments[i].equals(this.nextMoveCoord())) {
+	        return true;
+	      }
+	    }
+	    return false;
+	  }
+	
+	  hitWall () {
+	    const newCoord = this.nextMoveCoord();
+	    debugger
+	    if (newCoord.xPos < 0 || newCoord.yPos < 0 || newCoord.xPos > 19 || newCoord.yPos > 19) {
+	      return true;
+	    } else {
+	      return false;
+	    }
+	  }
+	
+	  nextMoveCoord () {
 	    const incCoord = Snake.DIRS[this.direction];
 	    return this.segments[0].plus(incCoord);
 	  }
 	
 	  grow () {
-	    this.segments.unshift(this.nextMove());
+	    this.segments.unshift(this.nextMoveCoord());
 	  }
 	
 	  setHead () {
@@ -203,19 +239,7 @@
 	    const newX = this.xPos + otherCoord.xPos;
 	    const newY = this.yPos + otherCoord.yPos;
 	    const newCoord = new Coord(newX, newY);
-	    if (newCoord.isValid()) {
-	      return newCoord;
-	    } else {
-	      window.alert("You lose!");
-	    }
-	  }
-	
-	  isValid () {
-	    if (this.xPos < 0 || this.yPos < 0 || this.xPos > 19 || this.yPos > 19) {
-	      return false;
-	    } else {
-	      return true;
-	    }
+	    return newCoord;
 	  }
 	
 	  equals (otherCoord) {
