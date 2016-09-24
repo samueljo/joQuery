@@ -100,7 +100,14 @@
 	
 	      let snakeIdx = snakeY * this.board.size + snakeX;
 	
-	      $($('li').get(snakeIdx)).addClass('snake');
+	      let snakeLi = $($('li').get(snakeIdx));
+	
+	      if (i === 0) {
+	        snakeLi.addClass('snake-head');
+	      }
+	
+	      debugger
+	      snakeLi.addClass('snake');
 	    }
 	  }
 	}
@@ -142,11 +149,13 @@
 	                                Math.floor(board.size / 2) + 1),
 	                      new Coord(Math.floor(board.size / 2),
 	                                Math.floor(board.size / 2) + 2)];
+	    this.setHead();
 	  }
 	
 	  move () {
 	    this.grow();
 	    this.segments.pop();
+	    this.setHead();
 	  }
 	
 	  turn (newDirection) {
@@ -157,10 +166,19 @@
 	    }
 	  }
 	
-	  grow () {
+	  nextMove () {
 	    const incCoord = Snake.DIRS[this.direction];
-	    this.segments.unshift(this.segments[0].plus(incCoord));
+	    return this.segments[0].plus(incCoord);
 	  }
+	
+	  grow () {
+	    this.segments.unshift(this.nextMove());
+	  }
+	
+	  setHead () {
+	    this.head = this.segments[0];
+	  }
+	
 	}
 	
 	Snake.DIRS = {  "N": new Coord(0, -1),

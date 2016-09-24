@@ -46,8 +46,8 @@ ul {
   width: 400px;
   height: 400px;
   background-color: tan;
-  /*background-image: url("../assets/grass.jpg");
-  background-size: cover;*/
+  /*background-image: url("../assets/grass.jpg");*/
+  /*background-size: cover;*/
   border: 5px solid black;
   /*transform: rotateX(45deg)*/
 }
@@ -61,5 +61,15 @@ li {
 }
 
 .snake {
-  background: red;
+  background: #00FF00;
+}
+
+.snake-head {
+  background: #006400;
+  /*height: 0;
+  width: 0;
+  border: 10px solid transparent;
+  border-right: 10px solid red;
+  border-left: 10px solid transparent;
+  background: transparent*/
 }

@@ -42,7 +42,14 @@ class View {
 
       let snakeIdx = snakeY * this.board.size + snakeX;
 
-      $($('li').get(snakeIdx)).addClass('snake');
+      let snakeLi = $($('li').get(snakeIdx));
+
+      if (i === 0) {
+        snakeLi.addClass('snake-head');
+      }
+
+      debugger
+      snakeLi.addClass('snake');
     }
   }
 }
