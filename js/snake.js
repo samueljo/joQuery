@@ -17,8 +17,12 @@ class Snake {
   }
 
   move () {
-    this.grow();
-    this.segments.pop();
+    this.segments.unshift(this.nextMoveCoord());
+    if (this.growing) {
+      this.growing--;
+    } else {
+      this.segments.pop();
+    }
     this.setHead();
   }
 
@@ -55,7 +59,7 @@ class Snake {
   }
 
   grow () {
-    this.segments.unshift(this.nextMoveCoord());
+    this.growing = 3;
   }
 
   setHead () {

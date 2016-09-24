@@ -92,6 +92,7 @@
 	      clearInterval(this.intervalID);
 	    } else {
 	      this.board.snake.move();
+	      this.board.eatsApple();
 	      this.drawBoard();
 	    }
 	  }
@@ -111,6 +112,8 @@
 	  drawBoard () {
 	    $('li').removeClass();
 	    const snakeSegs = this.board.snake.segments;
+	    const appleIdx = this.getLiIndex(this.board.apple.coord);
+	    $($('li').get(appleIdx)).addClass('apple');
 	
 	    for (let i = 0; i < snakeSegs.length; i++) {
 	      let snakeIdx = this.getLiIndex(snakeSegs[i]);
@@ -123,26 +126,6 @@
 	      snakeLi.addClass('snake');
 	    }
 	  }
-	
-	  // isSnake (coord) {
-	  //   const $li = $($('li').get(Coord.getLiIndex(coord)));
-	  //
-	  //   if ($li.classList.includes("snake")) {
-	  //     return true;
-	  //   } else {
-	  //     return false;
-	  //   }
-	  // }
-	  //
-	  // isApple (coord) {
-	  //   const $li = $($('li').get(Coord.getLiIndex(coord)));
-	  //
-	  //   if ($li.classList.includes("apple")) {
-	  //     return true;
-	  //   } else {
-	  //     return false;
-	  //   }
-	  // }
 	}
 	
 	View.MOVES = { 37: "W", 38: "N", 39: "E", 40: "S" };
@@ -156,11 +139,36 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	const Snake = __webpack_require__(3);
+	const Apple = __webpack_require__(5);
 	
 	class Board {
 	  constructor (size) {
 	    this.size = size; // length of (square) board
 	    this.snake = new Snake(this);
+	    this.addApple();
+	  }
+	
+	  isValidApple (coord) {
+	    this.snake.segments.forEach ( (segment) => {
+	      if (segment.equals(coord)) {
+	        return false;
+	      }
+	    });
+	    return true;
+	  }
+	
+	  addApple () {
+	    this.apple = new Apple(this.size);
+	    while (!this.isValidApple(this.apple.coord)) {
+	      this.apple = new Apple(this.size);
+	    }
+	  }
+	
+	  eatsApple () {
+	    if (this.snake.segments[0].equals(this.apple.coord)) {
+	      this.snake.grow();
+	      this.addApple();
+	    }
 	  }
 	}
 	
@@ -190,8 +198,12 @@
 	  }
 	
 	  move () {
-	    this.grow();
-	    this.segments.pop();
+	    this.segments.unshift(this.nextMoveCoord());
+	    if (this.growing) {
+	      this.growing--;
+	    } else {
+	      this.segments.pop();
+	    }
 	    this.setHead();
 	  }
 	
@@ -228,7 +240,7 @@
 	  }
 	
 	  grow () {
-	    this.segments.unshift(this.nextMoveCoord());
+	    this.growing = 3;
 	  }
 	
 	  setHead () {
@@ -274,9 +286,32 @@
 	      return false;
 	    }
 	  }
+	
+	  static randomCoord (boardSize) {
+	    const min = Math.ceil(0);
+	    const max = Math.floor(boardSize);
+	    const xPos = Math.floor(Math.random() * (max - min)) + min;
+	    const yPos = Math.floor(Math.random() * (max - min)) + min;
+	    return new Coord(xPos, yPos);
+	  }
 	}
 	
 	module.exports = Coord;
+
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	const Coord = __webpack_require__(4);
+	
+	class Apple {
+	  constructor (boardSize) {
+	    this.coord = Coord.randomCoord(boardSize);
+	  }
+	}
+	
+	module.exports = Apple;
 
 
 /***/ }

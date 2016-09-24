@@ -34,6 +34,7 @@ class View {
       clearInterval(this.intervalID);
     } else {
       this.board.snake.move();
+      this.board.eatsApple();
       this.drawBoard();
     }
   }
@@ -53,6 +54,8 @@ class View {
   drawBoard () {
     $('li').removeClass();
     const snakeSegs = this.board.snake.segments;
+    const appleIdx = this.getLiIndex(this.board.apple.coord);
+    $($('li').get(appleIdx)).addClass('apple');
 
     for (let i = 0; i < snakeSegs.length; i++) {
       let snakeIdx = this.getLiIndex(snakeSegs[i]);
@@ -65,26 +68,6 @@ class View {
       snakeLi.addClass('snake');
     }
   }
-
-  // isSnake (coord) {
-  //   const $li = $($('li').get(Coord.getLiIndex(coord)));
-  //
-  //   if ($li.classList.includes("snake")) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-  //
-  // isApple (coord) {
-  //   const $li = $($('li').get(Coord.getLiIndex(coord)));
-  //
-  //   if ($li.classList.includes("apple")) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
 }
 
 View.MOVES = { 37: "W", 38: "N", 39: "E", 40: "S" };

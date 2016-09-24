@@ -23,6 +23,14 @@ class Coord {
       return false;
     }
   }
+
+  static randomCoord (boardSize) {
+    const min = Math.ceil(0);
+    const max = Math.floor(boardSize);
+    const xPos = Math.floor(Math.random() * (max - min)) + min;
+    const yPos = Math.floor(Math.random() * (max - min)) + min;
+    return new Coord(xPos, yPos);
+  }
 }
 
 module.exports = Coord;
