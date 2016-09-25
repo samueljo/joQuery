@@ -17,6 +17,7 @@ body {
 }
 
 .grid {
+  position: relative;
   height:410px;
   width: 410px;
   margin: 0 auto;
@@ -84,4 +85,26 @@ li {
   font-weight: 700;
   text-align: center;
   margin: 10px;
+}
+
+.pause {
+  display: block;
+  position: absolute;
+  background: rgba(105, 105, 105, .7);
+  text-align: center;
+  padding: 10px;
+  border-radius: 15px;
+  font: black;
+  font-family: sans-serif;
+  font-size: 48px;
+  top: 25%;
+  left: 26.5%;
+}
+
+footer {
+  display: block;
+  font-family: sans-serif;
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
 }

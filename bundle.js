@@ -96,11 +96,15 @@
 	      this.playing = false;
 	      clearInterval(this.intervalID);
 	      this.keyEvent();
+	      const $grid =
+	      $('.grid').append($('<h3>').addClass('pause').text('Paused'));
 	    } else {
 	      // Resumes the game
 	      this.playing = true;
 	      this.intervalID = setInterval(this.step.bind(this), 75);
+	      $('.pause').remove();
 	    }
+	
 	  }
 	
 	  keyEvent() {
