@@ -81,14 +81,14 @@
 	    } else if (e.keyCode === 32 && !this.playing) {
 	      console.log("resume");
 	      this.playing = true;
-	      this.intervalID = setInterval(this.step.bind(this), 100);
+	      this.intervalID = setInterval(this.step.bind(this), 75);
 	      return;
 	    } else if (Object.keys(View.MOVES).includes(`${e.keyCode}`)) {
 	      const direction = e.keyCode;
 	      this.board.snake.turn(View.MOVES[direction]);
 	    }
-	    $(window).keydown(function(e) {
-	      this.handleKeyEvent(e);
+	    $(window).keydown(function(event) {
+	      this.handleKeyEvent(event);
 	    }.bind(this));
 	  }
 	
@@ -100,9 +100,10 @@
 	    for (let i = 0; i < this.board.size * this.board.size; i++) {
 	      $board.append($('<li>').addClass('tile').addClass('empty'));
 	    }
+	
 	    const points = this.points;
 	    const $points = $('<h2>');
-	    $('.grid').append($points);
+	    this.$el.append($points);
 	    $points.addClass('points');
 	    $points.text(`${points}`);
 	  }
@@ -179,11 +180,11 @@
 	  }
 	
 	  isValidApple (coord) {
-	    this.snake.segments.forEach ( (segment) => {
-	      if (segment.equals(coord)) {
+	    for (let i = 0; i < this.snake.segments.length; i++) {
+	      if (this.snake.segments[i].equals(coord)) {
 	        return false;
 	      }
-	    });
+	    }
 	    return true;
 	  }
 	
@@ -259,7 +260,12 @@
 	  hitWall () {
 	    const newCoord = this.nextMoveCoord();
 	
-	    if (newCoord.xPos < 0 || newCoord.yPos < 0 || newCoord.xPos > 19 || newCoord.yPos > 19) {
+	    if (
+	      newCoord.xPos < 0 ||
+	      newCoord.yPos < 0 ||
+	      newCoord.xPos > 19 ||
+	      newCoord.yPos > 19
+	    ) {
 	      return true;
 	    } else {
 	      return false;

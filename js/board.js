@@ -9,11 +9,11 @@ class Board {
   }
 
   isValidApple (coord) {
-    this.snake.segments.forEach ( (segment) => {
-      if (segment.equals(coord)) {
+    for (let i = 0; i < this.snake.segments.length; i++) {
+      if (this.snake.segments[i].equals(coord)) {
         return false;
       }
-    });
+    }
     return true;
   }
 

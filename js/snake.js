@@ -46,7 +46,12 @@ class Snake {
   hitWall () {
     const newCoord = this.nextMoveCoord();
 
-    if (newCoord.xPos < 0 || newCoord.yPos < 0 || newCoord.xPos > 19 || newCoord.yPos > 19) {
+    if (
+      newCoord.xPos < 0 ||
+      newCoord.yPos < 0 ||
+      newCoord.xPos > 19 ||
+      newCoord.yPos > 19
+    ) {
       return true;
     } else {
       return false;
