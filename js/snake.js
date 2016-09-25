@@ -1,7 +1,7 @@
 const Coord = require('./coord');
 
 class Snake {
-  constructor (board) {
+  constructor(board) {
     this.direction = "N"; // direction is key in DIRS (i.e. "N")
     this.segments = [ new Coord(Math.floor(board.size / 2),
                                 Math.floor(board.size / 2)),
@@ -16,7 +16,7 @@ class Snake {
     this.setHead();
   }
 
-  move () {
+  move() {
     this.segments.unshift(this.nextMoveCoord());
     if (this.growing) {
       this.growing--;
@@ -26,7 +26,7 @@ class Snake {
     this.setHead();
   }
 
-  turn (newDirection) {
+  turn(newDirection) {
     if (Snake.DIRS[this.direction].isOpposite(Snake.DIRS[newDirection])) {
       this.direction = this.direction;
     } else {
@@ -34,7 +34,7 @@ class Snake {
     }
   }
 
-  hitSelf () {
+  hitSelf() {
     for (let i = 0; i < this.segments.length; i++) {
       if (this.segments[i].equals(this.nextMoveCoord())) {
         return true;
@@ -43,7 +43,7 @@ class Snake {
     return false;
   }
 
-  hitWall () {
+  hitWall() {
     const newCoord = this.nextMoveCoord();
 
     if (
@@ -58,16 +58,16 @@ class Snake {
     }
   }
 
-  nextMoveCoord () {
+  nextMoveCoord() {
     const incCoord = Snake.DIRS[this.direction];
     return this.segments[0].plus(incCoord);
   }
 
-  grow () {
+  grow() {
     this.growing = 3;
   }
 
-  setHead () {
+  setHead() {
     this.head = this.segments[0];
   }
 

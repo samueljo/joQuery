@@ -1,7 +1,7 @@
 const Board = require('./board.js');
 
 class View {
-  constructor ($el) {
+  constructor($el) {
     this.$el = $el;
     this.board = new Board(20);
     this.points = 0;
@@ -10,15 +10,15 @@ class View {
     this.playing = false;
   }
 
-  handleKeyEvent (e) {
+  handleKeyEvent(e) {
     console.log(this.intervalID);
     $(window).off();
     if (e.keyCode === 32 && this.playing) {
+      // Pauses the game
       this.playing = false;
-      console.log("pause");
       clearInterval(this.intervalID);
     } else if (e.keyCode === 32 && !this.playing) {
-      console.log("resume");
+      // Resumes the game
       this.playing = true;
       this.intervalID = setInterval(this.step.bind(this), 75);
       return;
@@ -26,12 +26,9 @@ class View {
       const direction = e.keyCode;
       this.board.snake.turn(View.MOVES[direction]);
     }
-    $(window).keydown(function(event) {
-      this.handleKeyEvent(event);
-    }.bind(this));
   }
 
-  setupBoard () {
+  setupBoard() {
     const $board = $('<ul>');
     $board.addClass('group');
     this.$el.append($board);
@@ -45,9 +42,11 @@ class View {
     this.$el.append($points);
     $points.addClass('points');
     $points.text(`${points}`);
+
+    // Restart button
   }
 
-  step () {
+  step() {
     if (this.lost()) {
       clearInterval(this.intervalID);
       window.alert('You lost!');
@@ -71,18 +70,18 @@ class View {
     }
   }
 
-  getLiIndex (coord) {
+  getLiIndex(coord) {
     return coord.yPos * this.board.size + coord.xPos;
   }
 
-  drawBoard () {
-    const points = this.points;
-    $('.points').text(`${points}`);
+  drawBoard() {
+    $('.points').text(`${ this.points }`);
+
+    const snakeSegs = this.board.snake.segments;
+    const appleIdx = this.getLiIndex(this.board.apple.coord);
 
     $('li').removeClass();
-    const snakeSegs = this.board.snake.segments;
 
-    const appleIdx = this.getLiIndex(this.board.apple.coord);
     $($('li').get(appleIdx)).addClass('apple');
 
     for (let i = 0; i < snakeSegs.length; i++) {

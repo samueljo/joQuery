@@ -62,7 +62,7 @@
 	const Board = __webpack_require__(2);
 	
 	class View {
-	  constructor ($el) {
+	  constructor($el) {
 	    this.$el = $el;
 	    this.board = new Board(20);
 	    this.points = 0;
@@ -71,15 +71,15 @@
 	    this.playing = false;
 	  }
 	
-	  handleKeyEvent (e) {
+	  handleKeyEvent(e) {
 	    console.log(this.intervalID);
 	    $(window).off();
 	    if (e.keyCode === 32 && this.playing) {
+	      // Pauses the game
 	      this.playing = false;
-	      console.log("pause");
 	      clearInterval(this.intervalID);
 	    } else if (e.keyCode === 32 && !this.playing) {
-	      console.log("resume");
+	      // Resumes the game
 	      this.playing = true;
 	      this.intervalID = setInterval(this.step.bind(this), 75);
 	      return;
@@ -87,12 +87,9 @@
 	      const direction = e.keyCode;
 	      this.board.snake.turn(View.MOVES[direction]);
 	    }
-	    $(window).keydown(function(event) {
-	      this.handleKeyEvent(event);
-	    }.bind(this));
 	  }
 	
-	  setupBoard () {
+	  setupBoard() {
 	    const $board = $('<ul>');
 	    $board.addClass('group');
 	    this.$el.append($board);
@@ -106,9 +103,11 @@
 	    this.$el.append($points);
 	    $points.addClass('points');
 	    $points.text(`${points}`);
+	
+	    // Restart button
 	  }
 	
-	  step () {
+	  step() {
 	    if (this.lost()) {
 	      clearInterval(this.intervalID);
 	      window.alert('You lost!');
@@ -132,18 +131,18 @@
 	    }
 	  }
 	
-	  getLiIndex (coord) {
+	  getLiIndex(coord) {
 	    return coord.yPos * this.board.size + coord.xPos;
 	  }
 	
-	  drawBoard () {
-	    const points = this.points;
-	    $('.points').text(`${points}`);
+	  drawBoard() {
+	    $('.points').text(`${ this.points }`);
+	
+	    const snakeSegs = this.board.snake.segments;
+	    const appleIdx = this.getLiIndex(this.board.apple.coord);
 	
 	    $('li').removeClass();
-	    const snakeSegs = this.board.snake.segments;
 	
-	    const appleIdx = this.getLiIndex(this.board.apple.coord);
 	    $($('li').get(appleIdx)).addClass('apple');
 	
 	    for (let i = 0; i < snakeSegs.length; i++) {
@@ -173,13 +172,13 @@
 	const Apple = __webpack_require__(5);
 	
 	class Board {
-	  constructor (size) {
+	  constructor(size) {
 	    this.size = size; // length of (square) board
 	    this.snake = new Snake(this);
 	    this.addApple();
 	  }
 	
-	  isValidApple (coord) {
+	  isValidApple(coord) {
 	    for (let i = 0; i < this.snake.segments.length; i++) {
 	      if (this.snake.segments[i].equals(coord)) {
 	        return false;
@@ -188,14 +187,14 @@
 	    return true;
 	  }
 	
-	  addApple () {
+	  addApple() {
 	    this.apple = new Apple(this.size);
 	    while (!this.isValidApple(this.apple.coord)) {
 	      this.apple = new Apple(this.size);
 	    }
 	  }
 	
-	  eatsApple () {
+	  eatsApple() {
 	    if (this.snake.segments[0].equals(this.apple.coord)) {
 	      this.snake.grow();
 	      this.addApple();
@@ -215,7 +214,7 @@
 	const Coord = __webpack_require__(4);
 	
 	class Snake {
-	  constructor (board) {
+	  constructor(board) {
 	    this.direction = "N"; // direction is key in DIRS (i.e. "N")
 	    this.segments = [ new Coord(Math.floor(board.size / 2),
 	                                Math.floor(board.size / 2)),
@@ -230,7 +229,7 @@
 	    this.setHead();
 	  }
 	
-	  move () {
+	  move() {
 	    this.segments.unshift(this.nextMoveCoord());
 	    if (this.growing) {
 	      this.growing--;
@@ -240,7 +239,7 @@
 	    this.setHead();
 	  }
 	
-	  turn (newDirection) {
+	  turn(newDirection) {
 	    if (Snake.DIRS[this.direction].isOpposite(Snake.DIRS[newDirection])) {
 	      this.direction = this.direction;
 	    } else {
@@ -248,7 +247,7 @@
 	    }
 	  }
 	
-	  hitSelf () {
+	  hitSelf() {
 	    for (let i = 0; i < this.segments.length; i++) {
 	      if (this.segments[i].equals(this.nextMoveCoord())) {
 	        return true;
@@ -257,7 +256,7 @@
 	    return false;
 	  }
 	
-	  hitWall () {
+	  hitWall() {
 	    const newCoord = this.nextMoveCoord();
 	
 	    if (
@@ -272,16 +271,16 @@
 	    }
 	  }
 	
-	  nextMoveCoord () {
+	  nextMoveCoord() {
 	    const incCoord = Snake.DIRS[this.direction];
 	    return this.segments[0].plus(incCoord);
 	  }
 	
-	  grow () {
+	  grow() {
 	    this.growing = 3;
 	  }
 	
-	  setHead () {
+	  setHead() {
 	    this.head = this.segments[0];
 	  }
 	
@@ -300,24 +299,24 @@
 /***/ function(module, exports) {
 
 	class Coord {
-	  constructor (xPos, yPos, boardSize) {
+	  constructor(xPos, yPos, boardSize) {
 	    this.xPos = xPos;
 	    this.yPos = yPos;
 	    this.boardSize = boardSize;
 	  }
 	
-	  plus (otherCoord) {
+	  plus(otherCoord) {
 	    const newX = this.xPos + otherCoord.xPos;
 	    const newY = this.yPos + otherCoord.yPos;
 	    const newCoord = new Coord(newX, newY);
 	    return newCoord;
 	  }
 	
-	  equals (otherCoord) {
+	  equals(otherCoord) {
 	    return ((this.xPos === otherCoord.xPos) && (this.yPos === otherCoord.yPos));
 	  }
 	
-	  isOpposite (otherCoord) {
+	  isOpposite(otherCoord) {
 	    if (otherCoord.xPos + this.xPos === 0 && otherCoord.yPos + this.yPos === 0) {
 	      return true;
 	    } else {
@@ -325,7 +324,7 @@
 	    }
 	  }
 	
-	  static randomCoord (boardSize) {
+	  static randomCoord(boardSize) {
 	    const min = Math.ceil(0);
 	    const max = Math.floor(boardSize);
 	    const xPos = Math.floor(Math.random() * (max - min)) + min;
@@ -344,7 +343,7 @@
 	const Coord = __webpack_require__(4);
 	
 	class Apple {
-	  constructor (boardSize) {
+	  constructor(boardSize) {
 	    this.coord = Coord.randomCoord(boardSize);
 	  }
 	}
