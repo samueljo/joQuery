@@ -87,7 +87,7 @@ li {
   margin: 10px;
 }
 
-.pause {
+.notice {
   display: block;
   position: absolute;
   background: rgba(105, 105, 105, .7);
@@ -96,9 +96,28 @@ li {
   border-radius: 15px;
   font: black;
   font-family: sans-serif;
+  margin: 0 auto;
+  width: 200px;
+  left: 102.5px;
+}
+
+.pause {
+  top: 20%;
   font-size: 48px;
-  top: 25%;
-  left: 26.5%;
+}
+
+.start {
+  font-size: 24px;
+  top: 40%;
+}
+
+.restart {
+  cursor: pointer;
+  font-size: 32px;
+  font-weight: 700;
+  width: 150px;
+  left: 136.5px;
+  top: 40%;
 }
 
 footer {

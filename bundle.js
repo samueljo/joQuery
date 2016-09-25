@@ -66,11 +66,19 @@
 	class View {
 	  constructor($el) {
 	    this.$el = $el;
+	    this.initialGameConfig();
+	  }
+	
+	  initialGameConfig() {
 	    this.board = new Board(20);
 	    this.points = 0;
 	    this.setupBoard();
-	
 	    this.playing = false;
+	  }
+	
+	  restart() {
+	    this.$el.empty();
+	    this.initialGameConfig();
 	  }
 	
 	  isValidDir(keyCode) {
@@ -97,12 +105,14 @@
 	      clearInterval(this.intervalID);
 	      this.keyEvent();
 	      const $grid =
-	      $('.grid').append($('<h3>').addClass('pause').text('Paused'));
+	      this.$el.append($('<h3>').addClass('notice pause').text('Paused'));
+	      this.$el.append($('<button>').addClass('notice restart').text('Restart'));
+	      this.clickEvent();
 	    } else {
 	      // Resumes the game
 	      this.playing = true;
 	      this.intervalID = setInterval(this.step.bind(this), 75);
-	      $('.pause').remove();
+	      $('.notice').remove();
 	    }
 	
 	  }
@@ -113,7 +123,16 @@
 	    }.bind(this));
 	  }
 	
+	  clickEvent() {
+	    $('.restart').click(function(event) {
+	      this.restart();
+	    }.bind(this));
+	  }
+	
 	  setupBoard() {
+	    this.$el.append($('<h3>').addClass('notice start')
+	      .text('Hit Space to Start'));
+	
 	    const $board = $('<ul>');
 	    $board.addClass('group');
 	    this.$el.append($board);
@@ -135,6 +154,8 @@
 	    if (this.lost()) {
 	      clearInterval(this.intervalID);
 	      window.alert('You lost!');
+	      this.$el.append($('<button>').addClass('notice restart').text('Restart'));
+	      this.clickEvent();
 	    } else {
 	      this.keyEvent();
 	      this.board.snake.move();
@@ -239,15 +260,7 @@
 	  constructor(board) {
 	    this.direction = "N"; // direction is key in DIRS (i.e. "N")
 	    this.segments = [ new Coord(Math.floor(board.size / 2),
-	                                Math.floor(board.size / 2)),
-	                      new Coord(Math.floor(board.size / 2),
-	                                Math.floor(board.size / 2) + 1),
-	                      new Coord(Math.floor(board.size / 2),
-	                                Math.floor(board.size / 2) + 2),
-	                      new Coord(Math.floor(board.size / 2),
-	                                Math.floor(board.size / 2) + 3),
-	                      new Coord(Math.floor(board.size / 2),
-	                                Math.floor(board.size / 2) + 4)];
+	                                Math.floor(board.size / 2))];
 	    this.setHead();
 	  }
 	

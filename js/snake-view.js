@@ -5,11 +5,19 @@ const Board = require('./board.js');
 class View {
   constructor($el) {
     this.$el = $el;
+    this.initialGameConfig();
+  }
+
+  initialGameConfig() {
     this.board = new Board(20);
     this.points = 0;
     this.setupBoard();
-
     this.playing = false;
+  }
+
+  restart() {
+    this.$el.empty();
+    this.initialGameConfig();
   }
 
   isValidDir(keyCode) {
@@ -36,12 +44,14 @@ class View {
       clearInterval(this.intervalID);
       this.keyEvent();
       const $grid =
-      $('.grid').append($('<h3>').addClass('pause').text('Paused'));
+      this.$el.append($('<h3>').addClass('notice pause').text('Paused'));
+      this.$el.append($('<button>').addClass('notice restart').text('Restart'));
+      this.clickEvent();
     } else {
       // Resumes the game
       this.playing = true;
       this.intervalID = setInterval(this.step.bind(this), 75);
-      $('.pause').remove();
+      $('.notice').remove();
     }
 
   }
@@ -52,7 +62,16 @@ class View {
     }.bind(this));
   }
 
+  clickEvent() {
+    $('.restart').click(function(event) {
+      this.restart();
+    }.bind(this));
+  }
+
   setupBoard() {
+    this.$el.append($('<h3>').addClass('notice start')
+      .text('Hit Space to Start'));
+
     const $board = $('<ul>');
     $board.addClass('group');
     this.$el.append($board);
@@ -74,6 +93,8 @@ class View {
     if (this.lost()) {
       clearInterval(this.intervalID);
       window.alert('You lost!');
+      this.$el.append($('<button>').addClass('notice restart').text('Restart'));
+      this.clickEvent();
     } else {
       this.keyEvent();
       this.board.snake.move();

@@ -4,15 +4,7 @@ class Snake {
   constructor(board) {
     this.direction = "N"; // direction is key in DIRS (i.e. "N")
     this.segments = [ new Coord(Math.floor(board.size / 2),
-                                Math.floor(board.size / 2)),
-                      new Coord(Math.floor(board.size / 2),
-                                Math.floor(board.size / 2) + 1),
-                      new Coord(Math.floor(board.size / 2),
-                                Math.floor(board.size / 2) + 2),
-                      new Coord(Math.floor(board.size / 2),
-                                Math.floor(board.size / 2) + 3),
-                      new Coord(Math.floor(board.size / 2),
-                                Math.floor(board.size / 2) + 4)];
+                                Math.floor(board.size / 2))];
     this.setHead();
   }
 
