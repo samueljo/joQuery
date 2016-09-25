@@ -61,6 +61,8 @@
 
 	const Board = __webpack_require__(2);
 	
+	// Need to modularize 'SnakeGame' to remove some functionality from view
+	
 	class View {
 	  constructor($el) {
 	    this.$el = $el;
@@ -71,22 +73,40 @@
 	    this.playing = false;
 	  }
 	
+	  isValidDir(keyCode) {
+	    return Object.keys(View.MOVES).includes(keyCode);
+	  }
+	
 	  handleKeyEvent(e) {
 	    console.log(this.intervalID);
 	    $(window).off();
-	    if (e.keyCode === 32 && this.playing) {
+	    if (e.keyCode === 32) {
+	      this.togglePause(e);
+	    } else if (this.isValidDir(e.keyCode.toString()) && this.playing) {
+	      const direction = e.keyCode;
+	      this.board.snake.turn(View.MOVES[direction]);
+	    } else {
+	      this.keyEvent();
+	    }
+	  }
+	
+	  togglePause(e) {
+	    if (this.playing) {
 	      // Pauses the game
 	      this.playing = false;
 	      clearInterval(this.intervalID);
-	    } else if (e.keyCode === 32 && !this.playing) {
+	      this.keyEvent();
+	    } else {
 	      // Resumes the game
 	      this.playing = true;
 	      this.intervalID = setInterval(this.step.bind(this), 75);
-	      return;
-	    } else if (Object.keys(View.MOVES).includes(`${e.keyCode}`)) {
-	      const direction = e.keyCode;
-	      this.board.snake.turn(View.MOVES[direction]);
 	    }
+	  }
+	
+	  keyEvent() {
+	    $(window).keydown(function(event) {
+	      this.handleKeyEvent(event);
+	    }.bind(this));
 	  }
 	
 	  setupBoard() {
@@ -112,9 +132,7 @@
 	      clearInterval(this.intervalID);
 	      window.alert('You lost!');
 	    } else {
-	      $(window).keydown(function(e) {
-	        this.handleKeyEvent(e);
-	      }.bind(this));
+	      this.keyEvent();
 	      this.board.snake.move();
 	      if (this.board.eatsApple()) {
 	        this.points += 10;

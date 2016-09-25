@@ -1,8 +1,9 @@
 const Board = require('./board.js');
 
 class SnakeGame {
-  constructor(board) {
-    
+  constructor() {
+    this.board = new Board(20);
+    this.points = 0;
   }
 }
 
