@@ -79,6 +79,7 @@
 	  restart() {
 	    this.$el.empty();
 	    this.initialGameConfig();
+	    this.drawBoard();
 	  }
 	
 	  isValidDir(keyCode) {
@@ -88,7 +89,10 @@
 	  handleKeyEvent(e) {
 	    console.log(this.intervalID);
 	    $(window).off();
-	    if (e.keyCode === 32) {
+	    if (e.keyCode === 32 && this.lost()) {
+	      this.restart();
+	      this.togglePause();
+	    } else if (e.keyCode === 32 && !this.lost()) {
 	      this.togglePause(e);
 	    } else if (this.isValidDir(e.keyCode.toString()) && this.playing) {
 	      const direction = e.keyCode;
@@ -100,16 +104,12 @@
 	
 	  togglePause(e) {
 	    if (this.playing) {
-	      // Pauses the game
 	      this.playing = false;
 	      clearInterval(this.intervalID);
 	      this.keyEvent();
 	      const $grid =
 	      this.$el.append($('<h3>').addClass('notice pause').text('Paused'));
-	      this.$el.append($('<button>').addClass('notice restart').text('Restart'));
-	      this.clickEvent();
 	    } else {
-	      // Resumes the game
 	      this.playing = true;
 	      this.intervalID = setInterval(this.step.bind(this), 75);
 	      $('.notice').remove();
@@ -120,12 +120,6 @@
 	  keyEvent() {
 	    $(window).keydown(function(event) {
 	      this.handleKeyEvent(event);
-	    }.bind(this));
-	  }
-	
-	  clickEvent() {
-	    $('.restart').click(function(event) {
-	      this.restart();
 	    }.bind(this));
 	  }
 	
@@ -154,8 +148,8 @@
 	    if (this.lost()) {
 	      clearInterval(this.intervalID);
 	      window.alert('You lost!');
-	      this.$el.append($('<button>').addClass('notice restart').text('Restart'));
-	      this.clickEvent();
+	      this.$el.append($('<h3>').addClass('notice restart').text('Restart'));
+	      this.keyEvent();
 	    } else {
 	      this.keyEvent();
 	      this.board.snake.move();

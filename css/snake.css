@@ -102,7 +102,7 @@ li {
 }
 
 .pause {
-  top: 20%;
+  top: 40%;
   font-size: 48px;
 }
 
@@ -112,12 +112,8 @@ li {
 }
 
 .restart {
-  cursor: pointer;
-  font-size: 32px;
-  font-weight: 700;
-  width: 150px;
-  left: 136.5px;
   top: 40%;
+  font-size: 48px;
 }
 
 footer {
