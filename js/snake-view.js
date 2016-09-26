@@ -1,37 +1,77 @@
 const Board = require('./board.js');
 
+// Need to modularize 'SnakeGame' to remove some functionality from view
+
 class View {
-  constructor ($el) {
+  constructor($el) {
     this.$el = $el;
+    this.initialGameConfig();
+  }
+
+  initialGameConfig() {
     this.board = new Board(20);
     this.points = 0;
     this.setupBoard();
-
     this.playing = false;
   }
 
-  handleKeyEvent (e) {
+  restart() {
+    this.$el.empty();
+    this.initialGameConfig();
+  }
+
+  isValidDir(keyCode) {
+    return Object.keys(View.MOVES).includes(keyCode);
+  }
+
+  handleKeyEvent(e) {
     console.log(this.intervalID);
     $(window).off();
-    if (e.keyCode === 32 && this.playing) {
-      this.playing = false;
-      console.log("pause");
-      clearInterval(this.intervalID);
-    } else if (e.keyCode === 32 && !this.playing) {
-      console.log("resume");
-      this.playing = true;
-      this.intervalID = setInterval(this.step.bind(this), 100);
-      return;
-    } else if (Object.keys(View.MOVES).includes(`${e.keyCode}`)) {
+    if (e.keyCode === 32) {
+      this.togglePause(e);
+    } else if (this.isValidDir(e.keyCode.toString()) && this.playing) {
       const direction = e.keyCode;
       this.board.snake.turn(View.MOVES[direction]);
+    } else {
+      this.keyEvent();
     }
-    $(window).keydown(function(e) {
-      this.handleKeyEvent(e);
+  }
+
+  togglePause(e) {
+    if (this.playing) {
+      // Pauses the game
+      this.playing = false;
+      clearInterval(this.intervalID);
+      this.keyEvent();
+      const $grid =
+      this.$el.append($('<h3>').addClass('notice pause').text('Paused'));
+      this.$el.append($('<button>').addClass('notice restart').text('Restart'));
+      this.clickEvent();
+    } else {
+      // Resumes the game
+      this.playing = true;
+      this.intervalID = setInterval(this.step.bind(this), 75);
+      $('.notice').remove();
+    }
+
+  }
+
+  keyEvent() {
+    $(window).keydown(function(event) {
+      this.handleKeyEvent(event);
     }.bind(this));
   }
 
-  setupBoard () {
+  clickEvent() {
+    $('.restart').click(function(event) {
+      this.restart();
+    }.bind(this));
+  }
+
+  setupBoard() {
+    this.$el.append($('<h3>').addClass('notice start')
+      .text('Hit Space to Start'));
+
     const $board = $('<ul>');
     $board.addClass('group');
     this.$el.append($board);
@@ -39,21 +79,24 @@ class View {
     for (let i = 0; i < this.board.size * this.board.size; i++) {
       $board.append($('<li>').addClass('tile').addClass('empty'));
     }
+
     const points = this.points;
     const $points = $('<h2>');
-    $('.grid').append($points);
+    this.$el.append($points);
     $points.addClass('points');
     $points.text(`${points}`);
+
+    // Restart button
   }
 
-  step () {
+  step() {
     if (this.lost()) {
       clearInterval(this.intervalID);
       window.alert('You lost!');
+      this.$el.append($('<button>').addClass('notice restart').text('Restart'));
+      this.clickEvent();
     } else {
-      $(window).keydown(function(e) {
-        this.handleKeyEvent(e);
-      }.bind(this));
+      this.keyEvent();
       this.board.snake.move();
       if (this.board.eatsApple()) {
         this.points += 10;
@@ -70,18 +113,18 @@ class View {
     }
   }
 
-  getLiIndex (coord) {
+  getLiIndex(coord) {
     return coord.yPos * this.board.size + coord.xPos;
   }
 
-  drawBoard () {
-    const points = this.points;
-    $('.points').text(`${points}`);
+  drawBoard() {
+    $('.points').text(`${ this.points }`);
+
+    const snakeSegs = this.board.snake.segments;
+    const appleIdx = this.getLiIndex(this.board.apple.coord);
 
     $('li').removeClass();
-    const snakeSegs = this.board.snake.segments;
 
-    const appleIdx = this.getLiIndex(this.board.apple.coord);
     $($('li').get(appleIdx)).addClass('apple');
 
     for (let i = 0; i < snakeSegs.length; i++) {

@@ -17,6 +17,7 @@ body {
 }
 
 .grid {
+  position: relative;
   height:410px;
   width: 410px;
   margin: 0 auto;
@@ -84,4 +85,45 @@ li {
   font-weight: 700;
   text-align: center;
   margin: 10px;
+}
+
+.notice {
+  display: block;
+  position: absolute;
+  background: rgba(105, 105, 105, .7);
+  text-align: center;
+  padding: 10px;
+  border-radius: 15px;
+  font: black;
+  font-family: sans-serif;
+  margin: 0 auto;
+  width: 200px;
+  left: 102.5px;
+}
+
+.pause {
+  top: 20%;
+  font-size: 48px;
+}
+
+.start {
+  font-size: 24px;
+  top: 40%;
+}
+
+.restart {
+  cursor: pointer;
+  font-size: 32px;
+  font-weight: 700;
+  width: 150px;
+  left: 136.5px;
+  top: 40%;
+}
+
+footer {
+  display: block;
+  font-family: sans-serif;
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
 }

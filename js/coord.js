@@ -1,22 +1,22 @@
 class Coord {
-  constructor (xPos, yPos, boardSize) {
+  constructor(xPos, yPos, boardSize) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.boardSize = boardSize;
   }
 
-  plus (otherCoord) {
+  plus(otherCoord) {
     const newX = this.xPos + otherCoord.xPos;
     const newY = this.yPos + otherCoord.yPos;
     const newCoord = new Coord(newX, newY);
     return newCoord;
   }
 
-  equals (otherCoord) {
+  equals(otherCoord) {
     return ((this.xPos === otherCoord.xPos) && (this.yPos === otherCoord.yPos));
   }
 
-  isOpposite (otherCoord) {
+  isOpposite(otherCoord) {
     if (otherCoord.xPos + this.xPos === 0 && otherCoord.yPos + this.yPos === 0) {
       return true;
     } else {
@@ -24,7 +24,7 @@ class Coord {
     }
   }
 
-  static randomCoord (boardSize) {
+  static randomCoord(boardSize) {
     const min = Math.ceil(0);
     const max = Math.floor(boardSize);
     const xPos = Math.floor(Math.random() * (max - min)) + min;
