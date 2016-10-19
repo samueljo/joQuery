@@ -46,10 +46,10 @@
 
 	const View = __webpack_require__(1);
 	
-	$l( () => {
-	  const view = new View($l('.grid'));
+	$jo( () => {
+	  const view = new View($jo('.grid'));
 	  view.drawBoard();
-	  $l(window).on("keydown", function(e) {
+	  $jo(window).on("keydown", function(e) {
 	    view.handleKeyEvent(e);
 	  });
 	});
@@ -85,7 +85,7 @@
 	  }
 	
 	  handleKeyEvent(e) {
-	    $l(window).off();
+	    $jo(window).off();
 	    if (e.keyCode === 32 && this.lost()) {
 	      this.restart();
 	      this.togglePause();
@@ -102,45 +102,45 @@
 	  togglePause(e) {
 	    if (this.playing) {
 	      this.playing = false;
-	      clearInterval(this.intervalID);
+	      window.clearInterval(this.intervalID);
 	      this.keyEvent();
-	      const $h3 = $l('<h3>');
+	      const $h3 = $jo('<h3>');
 	      $h3.addClass('notice pause');
 	      $h3.text('Paused');
 	      this.$el.append($h3);
 	    } else {
 	      this.playing = true;
-	      this.intervalID = setInterval(this.step.bind(this), 75);
-	      $l('.notice').remove();
+	      this.intervalID = window.setInterval(this.step.bind(this), 75);
+	      $jo('.notice').remove();
 	    }
 	
 	  }
 	
 	  keyEvent() {
-	    $l(window).on("keydown", function(event) {
+	    $jo(window).on("keydown", function(event) {
 	      this.handleKeyEvent(event);
 	    }.bind(this));
 	  }
 	
 	  setupBoard() {
-	    const $h3 = $l('<h3>');
+	    const $h3 = $jo('<h3>');
 	    $h3.addClass('notice start');
 	    $h3.text('Hit Space to Start');
 	    this.$el.append($h3);
 	
-	    const $board = $l('<ul>');
+	    const $board = $jo('<ul>');
 	    $board.addClass('board group');
 	
 	    for (let i = 0; i < this.board.size * this.board.size; i++) {
-	      let $li = $l('<li>');
-	      $li.addClass('tile');
-	      $board.append($li);
+	      let $joi = $jo('<li>');
+	      $joi.addClass('tile');
+	      $board.append($joi);
 	    }
 	
 	    this.$el.append($board);
 	
 	    const points = this.points;
-	    const $points = $l('<h2>');
+	    const $points = $jo('<h2>');
 	    $points.addClass('points');
 	    $points.text(`${points}`);
 	    this.$el.append($points);
@@ -148,9 +148,9 @@
 	
 	  step() {
 	    if (this.lost()) {
-	      clearInterval(this.intervalID);
+	      window.clearInterval(this.intervalID);
 	      window.alert('You lost!');
-	      const $h3 = $l('<h3>');
+	      const $h3 = $jo('<h3>');
 	      $h3.addClass('notice restart');
 	      $h3.text('Restart');
 	      this.$el.append($h3);
@@ -178,21 +178,21 @@
 	  }
 	
 	  drawBoard() {
-	    $l('.points').text(`${ this.points }`);
+	    $jo('.points').text(`${ this.points }`);
 	
 	    const snakeSegs = this.board.snake.segments;
 	    const appleIdx = this.getLiIndex(this.board.apple.coord);
 	
-	    $l('li').removeClass('snake-head');
-	    $l('li').removeClass('snake');
-	    $l('li').removeClass('apple');
+	    $jo('li').removeClass('snake-head');
+	    $jo('li').removeClass('snake');
+	    $jo('li').removeClass('apple');
 	
-	    const apple = $l($l('li').get(appleIdx));
+	    const apple = $jo($jo('li').get(appleIdx));
 	    apple.addClass('apple');
 	
 	    for (let i = 0; i < snakeSegs.length; i++) {
 	      let snakeIdx = this.getLiIndex(snakeSegs[i]);
-	      let snakeLi = $l($l('li').get(snakeIdx));
+	      let snakeLi = $jo($jo('li').get(snakeIdx));
 	
 	      if (i === 0) {
 	        snakeLi.addClass('snake-head');

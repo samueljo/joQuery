@@ -1,9 +1,9 @@
 const View = require('./snake-view');
 
-$l( () => {
-  const view = new View($l('.grid'));
+$jo( () => {
+  const view = new View($jo('.grid'));
   view.drawBoard();
-  $l(window).on("keydown", function(e) {
+  $jo(window).on("keydown", function(e) {
     view.handleKeyEvent(e);
   });
 });
