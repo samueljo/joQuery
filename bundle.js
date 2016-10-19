@@ -46,10 +46,10 @@
 
 	const View = __webpack_require__(1);
 	
-	$( () => {
-	  const view = new View($('.grid'));
+	$jo( () => {
+	  const view = new View($jo('.grid'));
 	  view.drawBoard();
-	  $(window).keydown(function(e) {
+	  $jo(window).on("keydown", function(e) {
 	    view.handleKeyEvent(e);
 	  });
 	});
@@ -60,8 +60,6 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	const Board = __webpack_require__(2);
-	
-	// Need to modularize 'SnakeGame' to remove some functionality from view
 	
 	class View {
 	  constructor($el) {
@@ -87,8 +85,10 @@
 	  }
 	
 	  handleKeyEvent(e) {
-	    console.log(this.intervalID);
-	    $(window).off();
+	    // $jo(window).off
+	    $jo(window).off("keydown", function(event) {
+	      this.handleKeyEvent(event);
+	    }.bind(this));
 	    if (e.keyCode === 32 && this.lost()) {
 	      this.restart();
 	      this.togglePause();
@@ -105,50 +105,58 @@
 	  togglePause(e) {
 	    if (this.playing) {
 	      this.playing = false;
-	      clearInterval(this.intervalID);
+	      window.clearInterval(this.intervalID);
 	      this.keyEvent();
-	      const $grid =
-	      this.$el.append($('<h3>').addClass('notice pause').text('Paused'));
+	      const $h3 = $jo('<h3>');
+	      $h3.addClass('notice pause');
+	      $h3.text('Paused');
+	      this.$el.append($h3);
 	    } else {
 	      this.playing = true;
-	      this.intervalID = setInterval(this.step.bind(this), 75);
-	      $('.notice').remove();
+	      this.intervalID = window.setInterval(this.step.bind(this), 75);
+	      $jo('.notice').remove();
 	    }
 	
 	  }
 	
 	  keyEvent() {
-	    $(window).keydown(function(event) {
+	    $jo(window).on("keydown", function(event) {
 	      this.handleKeyEvent(event);
 	    }.bind(this));
 	  }
 	
 	  setupBoard() {
-	    this.$el.append($('<h3>').addClass('notice start')
-	      .text('Hit Space to Start'));
+	    const $h3 = $jo('<h3>');
+	    $h3.addClass('notice start');
+	    $h3.text('Hit Space to Start');
+	    this.$el.append($h3);
 	
-	    const $board = $('<ul>');
-	    $board.addClass('group');
-	    this.$el.append($board);
+	    const $board = $jo('<ul>');
+	    $board.addClass('board group');
 	
 	    for (let i = 0; i < this.board.size * this.board.size; i++) {
-	      $board.append($('<li>').addClass('tile').addClass('empty'));
+	      let $joi = $jo('<li>');
+	      $joi.addClass('tile');
+	      $board.append($joi);
 	    }
 	
+	    this.$el.append($board);
+	
 	    const points = this.points;
-	    const $points = $('<h2>');
-	    this.$el.append($points);
+	    const $points = $jo('<h2>');
 	    $points.addClass('points');
 	    $points.text(`${points}`);
-	
-	    // Restart button
+	    this.$el.append($points);
 	  }
 	
 	  step() {
 	    if (this.lost()) {
-	      clearInterval(this.intervalID);
+	      window.clearInterval(this.intervalID);
 	      window.alert('You lost!');
-	      this.$el.append($('<h3>').addClass('notice restart').text('Restart'));
+	      const $h3 = $jo('<h3>');
+	      $h3.addClass('notice restart');
+	      $h3.text('Restart');
+	      this.$el.append($h3);
 	      this.keyEvent();
 	    } else {
 	      this.keyEvent();
@@ -173,18 +181,21 @@
 	  }
 	
 	  drawBoard() {
-	    $('.points').text(`${ this.points }`);
+	    $jo('.points').text(`${ this.points }`);
 	
 	    const snakeSegs = this.board.snake.segments;
 	    const appleIdx = this.getLiIndex(this.board.apple.coord);
 	
-	    $('li').removeClass();
+	    $jo('li').removeClass('snake-head');
+	    $jo('li').removeClass('snake');
+	    $jo('li').removeClass('apple');
 	
-	    $($('li').get(appleIdx)).addClass('apple');
+	    const apple = $jo($jo('li').get(appleIdx));
+	    apple.addClass('apple');
 	
 	    for (let i = 0; i < snakeSegs.length; i++) {
 	      let snakeIdx = this.getLiIndex(snakeSegs[i]);
-	      let snakeLi = $($('li').get(snakeIdx));
+	      let snakeLi = $jo($jo('li').get(snakeIdx));
 	
 	      if (i === 0) {
 	        snakeLi.addClass('snake-head');
@@ -210,7 +221,7 @@
 	
 	class Board {
 	  constructor(size) {
-	    this.size = size; // length of (square) board
+	    this.size = size;
 	    this.snake = new Snake(this);
 	    this.addApple();
 	  }
