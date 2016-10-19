@@ -28,63 +28,57 @@ $jo.extend(objA, objB, objC);
 // Merges two or more JavaScript objects
 
 $jo.ajax(options);
-// Receives an options object argument and sends an AJAX request with native JavaScript using an XHR, or XMLHttpRequest object.
+// Receives an options object argument and sends an AJAX request with native JavaScript using an XHR, or XMLHttpRequest object
 ```
 
-#### DOMNodeCollection
+#### `DOMNodeCollection.prototype` Methods
 
-DOMNodeCollection.html(string)
+##### `html`
+* `html` receives an optional string as an argument
+* With argument: the string will be the `innerHTML` of each node
+* Without argument: returns `innerHTML` of the first node
+
+#### `empty`
+* Clears all nodes in the collection array
+
+#### `append`
+* Accepts a joQuery wrapped collection, an HTML element, or a string
+* Appends the `outerHTML` of each element in argument to `innerHTML` of each element in the node collection
+
+#### `attr`
+* Getter method for values of an attribute for the first element from array of matched elements
+* Acts as a setter method if a second argument of value is passed in
+
+#### `addClass`
+* Takes a class as an argument and adds it to HTML elements in the node collection
+* Can accept multiple classes like so:
 ```javascript
+$jo('<h3>').addClass('notice pause');
 ```
 
-DOMNodeCollection.empty()
-```javascript
-```
+#### `removeClass`
+* Takes a single class as an argument and removes it from the HTML elements in the node collection
 
-DOMNodeCollection.append(content)
-```javascript
-```
+#### `children`
+* Returns a node collection of all children of all nodes in the array
 
-DOMNodeCollection.attr(name, value)
-```javascript
-```
+#### `parent`
+* Returns a node collection of the `parent`s of each of the nodes
 
-DOMNodeCollection.addClass(name)
-```javascript
-```
+#### `find`
+* Accepts a selector as an argument and returns a matching node collection
 
-DOMNodeCollection.removeClass(name)
-```javascript
-```
+#### `remove`
+* Removes the html of all the nodes in the collection from the DOM
 
-DOMNodeCollection.children()
-```javascript
-```
+#### `on`
+* Accepts an event and a callback and adds the event handler from every element in the node array
 
-DOMNodeCollection.parent()
-```javascript
-```
+#### `off`
+* Accepts an event and a callback and removes the event handler from every element in the node array
 
-DOMNodeCollection.find(selector)
-```javascript
-```
+#### `text`
+* Accepts a string and adds it to the HTML element text content
 
-DOMNodeCollection.remove()
-```javascript
-```
-
-DOMNodeCollection.on(event, callback)
-```javascript
-```
-
-DOMNodeCollection.off(event, callback)
-```javascript
-```
-
-DOMNodeCollection.text(textString)
-```javascript
-```
-
-DOMNodeCollection.get(index)
-```javascript
-```
+#### `get`
+* Takes in an index and fetches the HTML element at that index from the node collection
