@@ -85,7 +85,10 @@
 	  }
 	
 	  handleKeyEvent(e) {
-	    $jo(window).off();
+	    // $jo(window).off
+	    $jo(window).off("keydown", function(event) {
+	      this.handleKeyEvent(event);
+	    }.bind(this));
 	    if (e.keyCode === 32 && this.lost()) {
 	      this.restart();
 	      this.togglePause();
