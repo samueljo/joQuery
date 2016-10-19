@@ -107,6 +107,17 @@ class DOMNodeCollection {
     });
     return;
   }
+
+  text(textString) {
+    this.htmlElements.forEach( (htmlElement) => {
+      htmlElement.textContent = textString;
+    });
+    return;
+  }
+
+  get(index) {
+    return this.htmlElements[index];
+  }
 }
 
 module.exports = DOMNodeCollection;

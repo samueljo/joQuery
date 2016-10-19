@@ -49,16 +49,27 @@
 	const funcQueue = [];
 
 	window.$l = function (arg) {
-	  if (typeof arg === "string") {
+	  if (arg === window) {
 	    return new DOMNodeCollection(
-	      Array.from(document.querySelectorAll(arg))
+	      [window]
 	    );
+	  } else if (typeof arg === "string") {
+	    if (arg[0] === "<") {
+	      const tag = arg.slice(1, -1);
+	      return new DOMNodeCollection(
+	        [document.createElement(tag)]
+	      );
+
+	    } else {
+	      return new DOMNodeCollection(
+	        Array.from(document.querySelectorAll(arg))
+	      );
+	    }
 	  } else if (arg instanceof HTMLElement) {
 	    return new DOMNodeCollection(
 	      [arg]
 	    );
 	  } else if (typeof arg === "function") {
-
 	    if (document.readyState === "complete") {
 	      arg();
 	    } else {
@@ -107,8 +118,6 @@
 
 	  xhr.send(defaults.data);
 	};
-
-
 
 	document.addEventListener("DOMContentLoaded", execute);
 
@@ -225,6 +234,17 @@
 	      htmlElement.removeEventListener(e, cb);
 	    });
 	    return;
+	  }
+
+	  text(textString) {
+	    this.htmlElements.forEach( (htmlElement) => {
+	      htmlElement.textContent = textString;
+	    });
+	    return;
+	  }
+
+	  get(index) {
+	    return this.htmlElements[index];
 	  }
 	}
 

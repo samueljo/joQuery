@@ -40,7 +40,7 @@ p {
   font-family: sans-serif;
 }
 
-ul {
+.board {
   display: block;
   margin: 0 auto;
   list-style: none;

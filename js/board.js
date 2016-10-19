@@ -3,7 +3,7 @@ const Apple = require('./apple.js');
 
 class Board {
   constructor(size) {
-    this.size = size; // length of (square) board
+    this.size = size;
     this.snake = new Snake(this);
     this.addApple();
   }

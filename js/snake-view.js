@@ -24,7 +24,6 @@ class View {
   }
 
   handleKeyEvent(e) {
-    console.log(this.intervalID);
     $l(window).off();
     if (e.keyCode === 32 && this.lost()) {
       this.restart();
@@ -44,8 +43,10 @@ class View {
       this.playing = false;
       clearInterval(this.intervalID);
       this.keyEvent();
-      const $grid =
-      this.$el.append($l('h3').addClass('notice pause').text('Paused'));
+      const $h3 = $l('<h3>');
+      $h3.addClass('notice pause');
+      $h3.text('Paused');
+      this.$el.append($h3);
     } else {
       this.playing = true;
       this.intervalID = setInterval(this.step.bind(this), 75);
@@ -55,35 +56,43 @@ class View {
   }
 
   keyEvent() {
-    $l(window).keydown(function(event) {
+    $l(window).on("keydown", function(event) {
       this.handleKeyEvent(event);
     }.bind(this));
   }
 
   setupBoard() {
-    this.$el.append($l('h3').addClass('notice start')
-      .text('Hit Space to Start'));
+    const $h3 = $l('<h3>');
+    $h3.addClass('notice start');
+    $h3.text('Hit Space to Start');
+    this.$el.append($h3);
 
-    const $board = $l('ul');
-    $board.addClass('group');
-    this.$el.append($board);
+    const $board = $l('<ul>');
+    $board.addClass('board group');
 
     for (let i = 0; i < this.board.size * this.board.size; i++) {
-      $board.append($l('li').addClass('tile').addClass('empty'));
+      let $li = $l('<li>');
+      $li.addClass('tile');
+      $board.append($li);
     }
 
+    this.$el.append($board);
+
     const points = this.points;
-    const $points = $l('h2');
-    this.$el.append($points);
+    const $points = $l('<h2>');
     $points.addClass('points');
     $points.text(`${points}`);
+    this.$el.append($points);
   }
 
   step() {
     if (this.lost()) {
       clearInterval(this.intervalID);
       window.alert('You lost!');
-      this.$el.append($l('h3').addClass('notice restart').text('Restart'));
+      const $h3 = $l('<h3>');
+      $h3.addClass('notice restart');
+      $h3.text('Restart');
+      this.$el.append($h3);
       this.keyEvent();
     } else {
       this.keyEvent();
@@ -113,9 +122,12 @@ class View {
     const snakeSegs = this.board.snake.segments;
     const appleIdx = this.getLiIndex(this.board.apple.coord);
 
-    $l('li').removeClass();
+    $l('li').removeClass('snake-head');
+    $l('li').removeClass('snake');
+    $l('li').removeClass('apple');
 
-    $l($l('li').get(appleIdx)).addClass('apple');
+    const apple = $l($l('li').get(appleIdx));
+    apple.addClass('apple');
 
     for (let i = 0; i < snakeSegs.length; i++) {
       let snakeIdx = this.getLiIndex(snakeSegs[i]);

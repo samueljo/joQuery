@@ -5,6 +5,5 @@ $l( () => {
   view.drawBoard();
   $l(window).on("keydown", function(e) {
     view.handleKeyEvent(e);
-    console.log('e');
   });
 });

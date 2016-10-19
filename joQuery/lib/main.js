@@ -4,11 +4,21 @@ const funcQueue = [];
 
 window.$l = function (arg) {
   if (arg === window) {
-    return window;
-  } else if (typeof arg === "string") {
     return new DOMNodeCollection(
-      Array.from(document.querySelectorAll(arg))
+      [window]
     );
+  } else if (typeof arg === "string") {
+    if (arg[0] === "<") {
+      const tag = arg.slice(1, -1);
+      return new DOMNodeCollection(
+        [document.createElement(tag)]
+      );
+
+    } else {
+      return new DOMNodeCollection(
+        Array.from(document.querySelectorAll(arg))
+      );
+    }
   } else if (arg instanceof HTMLElement) {
     return new DOMNodeCollection(
       [arg]
