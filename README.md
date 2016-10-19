@@ -28,7 +28,7 @@ $jo.extend(objA, objB, objC);
 // Merges two or more JavaScript objects
 
 $jo.ajax(options);
-// Receives an options object argument and sends an AJAX request with native JavaScript using an XHR, or XMLHttpRequest object
+// Receives an options object argument and sends an AJAX request with native JavaScript using an XHR, or XMLHttpRequest objectg
 ```
 
 #### `DOMNodeCollection.prototype` Methods
