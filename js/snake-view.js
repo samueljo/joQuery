@@ -1,7 +1,5 @@
 const Board = require('./board.js');
 
-// Need to modularize 'SnakeGame' to remove some functionality from view
-
 class View {
   constructor($el) {
     this.$el = $el;
@@ -27,7 +25,7 @@ class View {
 
   handleKeyEvent(e) {
     console.log(this.intervalID);
-    $(window).off();
+    $l(window).off();
     if (e.keyCode === 32 && this.lost()) {
       this.restart();
       this.togglePause();
@@ -47,47 +45,45 @@ class View {
       clearInterval(this.intervalID);
       this.keyEvent();
       const $grid =
-      this.$el.append($('<h3>').addClass('notice pause').text('Paused'));
+      this.$el.append($l('h3').addClass('notice pause').text('Paused'));
     } else {
       this.playing = true;
       this.intervalID = setInterval(this.step.bind(this), 75);
-      $('.notice').remove();
+      $l('.notice').remove();
     }
 
   }
 
   keyEvent() {
-    $(window).keydown(function(event) {
+    $l(window).keydown(function(event) {
       this.handleKeyEvent(event);
     }.bind(this));
   }
 
   setupBoard() {
-    this.$el.append($('<h3>').addClass('notice start')
+    this.$el.append($l('h3').addClass('notice start')
       .text('Hit Space to Start'));
 
-    const $board = $('<ul>');
+    const $board = $l('ul');
     $board.addClass('group');
     this.$el.append($board);
 
     for (let i = 0; i < this.board.size * this.board.size; i++) {
-      $board.append($('<li>').addClass('tile').addClass('empty'));
+      $board.append($l('li').addClass('tile').addClass('empty'));
     }
 
     const points = this.points;
-    const $points = $('<h2>');
+    const $points = $l('h2');
     this.$el.append($points);
     $points.addClass('points');
     $points.text(`${points}`);
-
-    // Restart button
   }
 
   step() {
     if (this.lost()) {
       clearInterval(this.intervalID);
       window.alert('You lost!');
-      this.$el.append($('<h3>').addClass('notice restart').text('Restart'));
+      this.$el.append($l('h3').addClass('notice restart').text('Restart'));
       this.keyEvent();
     } else {
       this.keyEvent();
@@ -112,18 +108,18 @@ class View {
   }
 
   drawBoard() {
-    $('.points').text(`${ this.points }`);
+    $l('.points').text(`${ this.points }`);
 
     const snakeSegs = this.board.snake.segments;
     const appleIdx = this.getLiIndex(this.board.apple.coord);
 
-    $('li').removeClass();
+    $l('li').removeClass();
 
-    $($('li').get(appleIdx)).addClass('apple');
+    $l($l('li').get(appleIdx)).addClass('apple');
 
     for (let i = 0; i < snakeSegs.length; i++) {
       let snakeIdx = this.getLiIndex(snakeSegs[i]);
-      let snakeLi = $($('li').get(snakeIdx));
+      let snakeLi = $l($l('li').get(snakeIdx));
 
       if (i === 0) {
         snakeLi.addClass('snake-head');
