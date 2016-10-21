@@ -85,7 +85,6 @@
 	  }
 	
 	  handleKeyEvent(e) {
-	    // $jo(window).off
 	    $jo(window).off("keydown", function(event) {
 	      this.handleKeyEvent(event);
 	    }.bind(this));
@@ -135,9 +134,9 @@
 	    $board.addClass('board group');
 	
 	    for (let i = 0; i < this.board.size * this.board.size; i++) {
-	      let $joi = $jo('<li>');
-	      $joi.addClass('tile');
-	      $board.append($joi);
+	      let $li = $jo('<li>');
+	      $li.addClass('tile');
+	      $board.append($li);
 	    }
 	
 	    this.$el.append($board);
