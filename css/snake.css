@@ -39,7 +39,7 @@ h5 {
   font-family: sans-serif;
   font-weight: 400;
   text-align: center;
-  margin-top: 0;
+  margin-top: 10px;
 }
 
 p {
@@ -134,12 +134,21 @@ footer {
   font-size: 16px;
 }
 
-a {
-  text-decoration: none;
+.link-nav {
+  display: flex;
+  justify-content: center;
 }
 
-a:hover {
+.link {
+  font-family: sans-serif;
+  font-size: 24px;
+  color: #000;
+  display: inline-block;
+  margin: 0 15px;
+}
+
+.link:hover {
   text-decoration: underline;
-  font-size: 20px;
-  color: #ccc;
+  color: #aaa;
+  font-size: 24px;
 }
