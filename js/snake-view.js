@@ -5,6 +5,7 @@ class View {
     this.$el = $el;
     this.initialGameConfig();
     this.eventFunction = this.handleKeyEvent;
+    this.keyEvent();
   }
 
   initialGameConfig() {
@@ -46,6 +47,22 @@ class View {
     $jo(window).on("keydown", function(e) {
       this.eventFunction(e);
     }.bind(this));
+
+    $jo('.close').on('click', function(e) {
+      this.handleCloseModal(e);
+    }.bind(this));
+
+    $jo('.leader-link').on('click', function(e) {
+      this.handleOpenModal(e);
+    }.bind(this));
+  }
+
+  handleCloseModal(e) {
+    $jo('.modal').addClass('hidden');
+  }
+
+  handleOpenModal(e) {
+    $jo('.modal').removeClass('hidden');
   }
 
   setupBoard() {
@@ -74,6 +91,12 @@ class View {
 
   step() {
     if (this.lost()) {
+      let isNewHighScore = (this.points > localStorage.getItem('snakeScore'));
+      if (!localStorage.getItem('snakeScore') || isNewHighScore) {
+        localStorage.setItem('snakeScore', this.points);
+      }
+      $jo('.highscore').text(`Highscore: ${localStorage.getItem('snakeScore')}`);
+      window.clearInterval(this.intervalId);
       window.clearInterval(this.intervalID);
       window.alert('You lost!');
       const $h3 = $jo('<h3>');
