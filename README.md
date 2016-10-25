@@ -53,11 +53,19 @@ $jo.ajax(options);
 * Takes a class as an argument and adds it to HTML elements in the node collection
 * Can accept multiple classes like so:
 ```javascript
-$jo('<h3>').addClass('notice pause');
+const $h3 = $jo('<h3>');
+$h3.addClass('notice start');
+$h3.text('Hit Space to Start');
+this.$el.append($h3);
 ```
 
 #### `removeClass`
 * Takes a single class as an argument and removes it from the HTML elements in the node collection
+```javascript
+$jo('li').removeClass('snake-head');
+$jo('li').removeClass('snake');
+$jo('li').removeClass('apple');
+```
 
 #### `children`
 * Returns a node collection of all children of all nodes in the array
