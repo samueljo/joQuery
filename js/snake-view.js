@@ -4,6 +4,7 @@ class View {
   constructor($el) {
     this.$el = $el;
     this.initialGameConfig();
+    this.eventFunction = this.handleKeyEvent;
   }
 
   initialGameConfig() {
@@ -24,42 +25,26 @@ class View {
   }
 
   handleKeyEvent(e) {
-    $jo(window).off("keydown", function(event) {
-      this.handleKeyEvent(event);
-    }.bind(this));
     if (e.keyCode === 32 && this.lost()) {
       this.restart();
-      this.togglePause();
-    } else if (e.keyCode === 32 && !this.lost()) {
-      this.togglePause(e);
+    } else if (e.keyCode === 32 && !this.playing) {
+      this.start();
     } else if (this.isValidDir(e.keyCode.toString()) && this.playing) {
       const direction = e.keyCode;
       this.board.snake.turn(View.MOVES[direction]);
-    } else {
-      this.keyEvent();
     }
   }
 
-  togglePause(e) {
-    if (this.playing) {
-      this.playing = false;
-      window.clearInterval(this.intervalID);
-      this.keyEvent();
-      const $h3 = $jo('<h3>');
-      $h3.addClass('notice pause');
-      $h3.text('Paused');
-      this.$el.append($h3);
-    } else {
-      this.playing = true;
-      this.intervalID = window.setInterval(this.step.bind(this), 75);
-      $jo('.notice').remove();
-    }
-
+  start(e) {
+    this.playing = true;
+    this.intervalID = window.setInterval(this.step.bind(this), 75);
+    $jo('.notice').remove();
   }
 
   keyEvent() {
-    $jo(window).on("keydown", function(event) {
-      this.handleKeyEvent(event);
+    this.eventFunction = this.handleKeyEvent;
+    $jo(window).on("keydown", function(e) {
+      this.eventFunction(e);
     }.bind(this));
   }
 
