@@ -276,10 +276,12 @@
 	    this.segments = [ new Coord(Math.floor(board.size / 2),
 	                                Math.floor(board.size / 2))];
 	    this.setHead();
+	    this.turning = false;
 	  }
 	
 	  move() {
 	    this.segments.unshift(this.nextMoveCoord());
+	    this.turning = false;
 	    if (this.growing) {
 	      this.growing--;
 	    } else {
@@ -289,9 +291,11 @@
 	  }
 	
 	  turn(newDirection) {
-	    if (Snake.DIRS[this.direction].isOpposite(Snake.DIRS[newDirection])) {
-	      this.direction = this.direction;
+	    if (Snake.DIRS[this.direction].isOpposite(Snake.DIRS[newDirection])
+	      || this.turning) {
+	      return;
 	    } else {
+	      this.turning = true;
 	      this.direction = newDirection;
 	    }
 	  }
