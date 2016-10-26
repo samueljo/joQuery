@@ -23,7 +23,7 @@ class Snake {
   turn(newDirection) {
     if (Snake.DIRS[this.direction].isOpposite(Snake.DIRS[newDirection])
       || this.turning) {
-      this.direction = this.direction;
+      return;
     } else {
       this.turning = true;
       this.direction = newDirection;
