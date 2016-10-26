@@ -21,11 +21,11 @@ class Snake {
   }
 
   turn(newDirection) {
-    this.turning = true;
     if (Snake.DIRS[this.direction].isOpposite(Snake.DIRS[newDirection])
       || this.turning) {
       this.direction = this.direction;
     } else {
+      this.turning = true;
       this.direction = newDirection;
     }
   }
