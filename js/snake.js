@@ -6,10 +6,12 @@ class Snake {
     this.segments = [ new Coord(Math.floor(board.size / 2),
                                 Math.floor(board.size / 2))];
     this.setHead();
+    this.turning = false;
   }
 
   move() {
     this.segments.unshift(this.nextMoveCoord());
+    this.turning = false;
     if (this.growing) {
       this.growing--;
     } else {
@@ -19,7 +21,9 @@ class Snake {
   }
 
   turn(newDirection) {
-    if (Snake.DIRS[this.direction].isOpposite(Snake.DIRS[newDirection])) {
+    this.turning = true;
+    if (Snake.DIRS[this.direction].isOpposite(Snake.DIRS[newDirection])
+      || this.turning) {
       this.direction = this.direction;
     } else {
       this.direction = newDirection;
