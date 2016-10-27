@@ -7,6 +7,13 @@ A light-weight library to manage core DOM manipulation functionality, making AJA
 
 ![snake](assets/snake.png)
 
+### How To Use
+
+Download `./joQuery/lib/` and include it in project directory. Wherever joQuery is used, include the following line at the top of the file:
+```javascript
+const $jo = require('./../joQuery/lib/main');
+```
+
 ### Methods
 
 #### $jo
