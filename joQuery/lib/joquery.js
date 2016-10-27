@@ -59,7 +59,7 @@
 	      return new DOMNodeCollection(
 	        [document.createElement(tag)]
 	      );
-
+				
 	    } else {
 	      return new DOMNodeCollection(
 	        Array.from(document.querySelectorAll(arg))

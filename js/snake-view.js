@@ -1,3 +1,4 @@
+const $jo = require('./../joQuery/lib/main');
 const Board = require('./board.js');
 
 class View {

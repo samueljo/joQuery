@@ -5,30 +5,32 @@ A light-weight library to manage core DOM manipulation functionality, making AJA
 [Demonstrated with an rendition of the classic game Snake!][Snake]
 [Snake]: https://samueljo.github.io/joQuery/
 
+![snake](assets/snake.png)
+
 ### Methods
 
 #### $jo
 
 ```javascript
-const $li = $jo('<li>');
 // $jo('<tag>') will create an HTML element with the tag and return a DOMNodeCollection object
+const $li = $jo('<li>');
 
+// $jo('tag') and $jo('.klass') will collect all matching nodes from the page and return a DOMNodeCollection object
 const collection = $jo('li');
 const collection = $jo('.snake');
-// $jo('tag') and $jo('.klass') will collect all matching nodes from the page and return a DOMNodeCollection object
 
-const collection = $jo(HTMLElement);
 // If argument is an instance of HTMLElement, function returns native HTMLElement wrapped in joQuery, returning a DOMNodeCollection
+const collection = $jo(HTMLElement);
 
-$jo(func);
 // If argument is a function, will push function into a queue to be executed on `document` `ready`
+$jo(func);
 
 
-$jo.extend(objA, objB, objC);
 // Merges two or more JavaScript objects
+$jo.extend(objA, objB, objC);
 
-$jo.ajax(options);
 // Receives an options object argument and sends an AJAX request with native JavaScript using an XHR, or XMLHttpRequest objectg
+$jo.ajax(options);
 ```
 
 #### `DOMNodeCollection.prototype` Methods
