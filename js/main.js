@@ -1,3 +1,4 @@
+const $jo = require('./../joQuery/lib/main');
 const View = require('./snake-view');
 
 $jo( () => {
