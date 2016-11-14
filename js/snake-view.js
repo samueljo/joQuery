@@ -2,8 +2,8 @@ const $jo = require('./../joQuery/lib/main');
 const Board = require('./board.js');
 
 class View {
-  constructor($el) {
-    this.$el = $el;
+  constructor() {
+    this.$jo = $jo;
     this.initialGameConfig();
     this.eventFunction = this.handleKeyEvent;
     this.keyEvent();
@@ -17,7 +17,7 @@ class View {
   }
 
   restart() {
-    this.$el.empty();
+    this.$jo.empty();
     this.initialGameConfig();
     this.drawBoard();
   }
@@ -70,7 +70,7 @@ class View {
     const $h3 = $jo('<h3>');
     $h3.addClass('notice start');
     $h3.text('Hit Space to Start');
-    this.$el.append($h3);
+    this.$jo.append($h3);
 
     const $board = $jo('<ul>');
     $board.addClass('board group');
@@ -81,13 +81,13 @@ class View {
       $board.append($li);
     }
 
-    this.$el.append($board);
+    this.$jo.append($board);
 
     const points = this.points;
     const $points = $jo('<h2>');
     $points.addClass('points');
     $points.text(`${points}`);
-    this.$el.append($points);
+    this.$jo.append($points);
   }
 
   step() {
@@ -103,7 +103,7 @@ class View {
       const $h3 = $jo('<h3>');
       $h3.addClass('notice restart');
       $h3.text('Restart');
-      this.$el.append($h3);
+      this.$jo.append($h3);
       this.keyEvent();
     } else {
       this.keyEvent();

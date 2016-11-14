@@ -65,7 +65,7 @@ $jo.ajax(options);
 const $h3 = $jo('<h3>');
 $h3.addClass('notice start');
 $h3.text('Hit Space to Start');
-this.$el.append($h3);
+this.$jo.append($h3);
 ```
 
 #### `removeClass`

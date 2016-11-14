@@ -66,8 +66,8 @@
 	const Board = __webpack_require__(2);
 	
 	class View {
-	  constructor($el) {
-	    this.$el = $el;
+	  constructor($jo) {
+	    this.$jo = $jo;
 	    this.initialGameConfig();
 	    this.eventFunction = this.handleKeyEvent;
 	    this.keyEvent();
@@ -81,7 +81,7 @@
 	  }
 	
 	  restart() {
-	    this.$el.empty();
+	    this.$jo.empty();
 	    this.initialGameConfig();
 	    this.drawBoard();
 	  }
@@ -134,7 +134,7 @@
 	    const $h3 = $jo('<h3>');
 	    $h3.addClass('notice start');
 	    $h3.text('Hit Space to Start');
-	    this.$el.append($h3);
+	    this.$jo.append($h3);
 	
 	    const $board = $jo('<ul>');
 	    $board.addClass('board group');
@@ -145,13 +145,13 @@
 	      $board.append($li);
 	    }
 	
-	    this.$el.append($board);
+	    this.$jo.append($board);
 	
 	    const points = this.points;
 	    const $points = $jo('<h2>');
 	    $points.addClass('points');
 	    $points.text(`${points}`);
-	    this.$el.append($points);
+	    this.$jo.append($points);
 	  }
 	
 	  step() {
@@ -167,7 +167,7 @@
 	      const $h3 = $jo('<h3>');
 	      $h3.addClass('notice restart');
 	      $h3.text('Restart');
-	      this.$el.append($h3);
+	      this.$jo.append($h3);
 	      this.keyEvent();
 	    } else {
 	      this.keyEvent();
