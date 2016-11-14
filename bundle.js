@@ -44,8 +44,8 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const $jo = __webpack_require__(6);
-	const View = __webpack_require__(1);
+	const $jo = __webpack_require__(1);
+	const View = __webpack_require__(3);
 	
 	$jo( () => {
 	  const view = new View($jo('.grid'));
@@ -62,12 +62,224 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const $jo = __webpack_require__(6);
-	const Board = __webpack_require__(2);
+	const DOMNodeCollection = __webpack_require__(2);
+	
+	const funcQueue = [];
+	
+	const $jo = function (arg) {
+	  if (arg === window) {
+	    return new DOMNodeCollection(
+	      [window]
+	    );
+	  } else if (typeof arg === "string") {
+	    if (arg[0] === "<") {
+	      const tag = arg.slice(1, -1);
+	      return new DOMNodeCollection(
+	        [document.createElement(tag)]
+	      );
+	    } else {
+	      return new DOMNodeCollection(
+	        Array.from(document.querySelectorAll(arg))
+	      );
+	    }
+	  } else if (arg instanceof HTMLElement) {
+	    return new DOMNodeCollection(
+	      [arg]
+	    );
+	  } else if (typeof arg === "function") {
+	    if (document.readyState === "complete") {
+	      arg();
+	    } else {
+	      funcQueue.push(arg);
+	    }
+	  }
+	};
+	
+	function execute() {
+	  funcQueue.forEach( (func) => {
+	    func();
+	  });
+	}
+	
+	$jo.extend = function (...objects) {
+	  const result = objects[0];
+	  objects.slice(1).forEach( (object) => {
+	    Object.keys(object).forEach( (key) => {
+	      result[key] = object[key];
+	    });
+	  });
+	
+	  return result;
+	};
+	
+	$jo.ajax = function (options) {
+	  let defaults = {
+	    method: "GET",
+	    url: "./",
+	    data: {},
+	    success: function() {},
+	    error: function() {},
+	  };
+	
+	  const xhr = new XMLHttpRequest();
+	  this.extend(defaults, options);
+	
+	  xhr.open(defaults.method, defaults.url);
+	  xhr.onload = function () {
+	    if (xhr.status === 200) {
+	      defaults.success(JSON.parse(xhr.response));
+	    } else {
+	      defaults.error(JSON.parse(xhr.response));
+	    }
+	  };
+	
+	  xhr.send(defaults.data);
+	};
+	
+	document.addEventListener("DOMContentLoaded", execute);
+	
+	module.exports = $jo;
+
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	class DOMNodeCollection {
+	  constructor(htmlElements) {
+	    this.htmlElements = htmlElements;
+	  }
+	
+	  html(string) {
+	    if (string === undefined) {
+	      return this.htmlElements[0].innerHTML;
+	    } else {
+	      this.htmlElements[0].innerHTML = string;
+	      return;
+	    }
+	  }
+	
+	  empty() {
+	    this.htmlElements.forEach( (htmlElement) => {
+	      htmlElement.innerHTML = "";
+	    });
+	    return;
+	  }
+	
+	  append(content) {
+	    if (content instanceof DOMNodeCollection) {
+	      this.htmlElements.forEach( (parentElement) => {
+	        content.htmlElements.forEach( (childElement) => {
+	          parentElement.innerHTML += childElement.outerHTML;
+	        });
+	      });
+	    } else if (typeof content === 'string') {
+	      this.htmlElements.forEach( (htmlElement) => {
+	        htmlElement.innerHTML += content;
+	      });
+	    } else if (content instanceof HTMLElement) {
+	      this.htmlElements.forEach( (htmlElement) => {
+	        htmlElement.innerHTML += content.outerHTML;
+	      });
+	    }
+	  }
+	
+	  attr(name, value) {
+	    if (value === undefined) {
+	      return this.htmlElements[0].getAttribute(name);
+	    } else {
+	      this.htmlElements[0].setAttribute(name, value);
+	      return;
+	    }
+	  }
+	
+	  addClass(name) {
+	    this.htmlElements.forEach( (htmlElement) => {
+	      name.split(" ").forEach ( (className) => {
+	        htmlElement.classList.add(className);
+	      });
+	    });
+	  }
+	
+	  removeClass(name) {
+	    this.htmlElements.forEach( (htmlElement) => {
+	      htmlElement.classList.remove(name);
+	    });
+	  }
+	
+	  children() {
+	    let childrenCollection = [];
+	    this.htmlElements.forEach( (htmlElement) => {
+	      childrenCollection = childrenCollection.concat(htmlElement.children);
+	    });
+	
+	    return new DOMNodeCollection(childrenCollection);
+	  }
+	
+	  parent() {
+	    const parentCollection = this.htmlElements.map( (htmlElement) => {
+	      return htmlElement.parentElement;
+	    });
+	
+	    return new DOMNodeCollection(parentCollection);
+	  }
+	
+	  find(selector) {
+	    let queryResult = [];
+	    this.htmlElements.forEach( (htmlElement) => {
+	      queryResult = queryResult.concat(htmlElement.querySelectorAll(selector));
+	    });
+	
+	    return new DOMNodeCollection(queryResult);
+	  }
+	
+	  remove() {
+	    this.htmlElements.forEach( (htmlElement) => {
+	      htmlElement.innerHTML = "";
+	      htmlElement.outerHTML = "";
+	    });
+	    return;
+	  }
+	
+	  on(e, cb) {
+	    this.htmlElements.forEach( (htmlElement) => {
+	      htmlElement.addEventListener(e, cb);
+	    });
+	    return;
+	  }
+	
+	  off(e, cb) {
+	    this.htmlElements.forEach( (htmlElement) => {
+	      htmlElement.removeEventListener(e, cb);
+	    });
+	    return;
+	  }
+	
+	  text(textString) {
+	    this.htmlElements.forEach( (htmlElement) => {
+	      htmlElement.textContent = textString;
+	    });
+	    return;
+	  }
+	
+	  get(index) {
+	    return this.htmlElements[index];
+	  }
+	}
+	
+	module.exports = DOMNodeCollection;
+
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	const $jo = __webpack_require__(1);
+	const Board = __webpack_require__(4);
 	
 	class View {
-	  constructor($jo) {
-	    this.$jo = $jo;
+	  constructor($) {
+	    this.$jo = $;
 	    this.initialGameConfig();
 	    this.eventFunction = this.handleKeyEvent;
 	    this.keyEvent();
@@ -224,11 +436,11 @@
 
 
 /***/ },
-/* 2 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const Snake = __webpack_require__(3);
-	const Apple = __webpack_require__(5);
+	const Snake = __webpack_require__(5);
+	const Apple = __webpack_require__(7);
 	
 	class Board {
 	  constructor(size) {
@@ -267,10 +479,10 @@
 
 
 /***/ },
-/* 3 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const Coord = __webpack_require__(4);
+	const Coord = __webpack_require__(6);
 	
 	class Snake {
 	  constructor(board) {
@@ -350,7 +562,7 @@
 
 
 /***/ },
-/* 4 */
+/* 6 */
 /***/ function(module, exports) {
 
 	class Coord {
@@ -392,10 +604,10 @@
 
 
 /***/ },
-/* 5 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const Coord = __webpack_require__(4);
+	const Coord = __webpack_require__(6);
 	
 	class Apple {
 	  constructor(boardSize) {
@@ -404,218 +616,6 @@
 	}
 	
 	module.exports = Apple;
-
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	const DOMNodeCollection = __webpack_require__(7);
-	
-	const funcQueue = [];
-	
-	const $jo = function (arg) {
-	  if (arg === window) {
-	    return new DOMNodeCollection(
-	      [window]
-	    );
-	  } else if (typeof arg === "string") {
-	    if (arg[0] === "<") {
-	      const tag = arg.slice(1, -1);
-	      return new DOMNodeCollection(
-	        [document.createElement(tag)]
-	      );
-	    } else {
-	      return new DOMNodeCollection(
-	        Array.from(document.querySelectorAll(arg))
-	      );
-	    }
-	  } else if (arg instanceof HTMLElement) {
-	    return new DOMNodeCollection(
-	      [arg]
-	    );
-	  } else if (typeof arg === "function") {
-	    if (document.readyState === "complete") {
-	      arg();
-	    } else {
-	      funcQueue.push(arg);
-	    }
-	  }
-	};
-	
-	function execute() {
-	  funcQueue.forEach( (func) => {
-	    func();
-	  });
-	}
-	
-	$jo.extend = function (...objects) {
-	  const result = objects[0];
-	  objects.slice(1).forEach( (object) => {
-	    Object.keys(object).forEach( (key) => {
-	      result[key] = object[key];
-	    });
-	  });
-	
-	  return result;
-	};
-	
-	$jo.ajax = function (options) {
-	  let defaults = {
-	    method: "GET",
-	    url: "./",
-	    data: {},
-	    success: function() {},
-	    error: function() {},
-	  };
-	
-	  const xhr = new XMLHttpRequest();
-	  this.extend(defaults, options);
-	
-	  xhr.open(defaults.method, defaults.url);
-	  xhr.onload = function () {
-	    if (xhr.status === 200) {
-	      defaults.success(JSON.parse(xhr.response));
-	    } else {
-	      defaults.error(JSON.parse(xhr.response));
-	    }
-	  };
-	
-	  xhr.send(defaults.data);
-	};
-	
-	document.addEventListener("DOMContentLoaded", execute);
-	
-	module.exports = $jo;
-
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	class DOMNodeCollection {
-	  constructor(htmlElements) {
-	    this.htmlElements = htmlElements;
-	  }
-	
-	  html(string) {
-	    if (string === undefined) {
-	      return this.htmlElements[0].innerHTML;
-	    } else {
-	      this.htmlElements[0].innerHTML = string;
-	      return;
-	    }
-	  }
-	
-	  empty() {
-	    this.htmlElements.forEach( (htmlElement) => {
-	      htmlElement.innerHTML = "";
-	    });
-	    return;
-	  }
-	
-	  append(content) {
-	    if (content instanceof DOMNodeCollection) {
-	      this.htmlElements.forEach( (parentElement) => {
-	        content.htmlElements.forEach( (childElement) => {
-	          parentElement.innerHTML += childElement.outerHTML;
-	        });
-	      });
-	    } else if (typeof content === 'string') {
-	      this.htmlElements.forEach( (htmlElement) => {
-	        htmlElement.innerHTML += content;
-	      });
-	    } else if (content instanceof HTMLElement) {
-	      this.htmlElements.forEach( (htmlElement) => {
-	        htmlElement.innerHTML += content.outerHTML;
-	      });
-	    }
-	  }
-	
-	  attr(name, value) {
-	    if (value === undefined) {
-	      return this.htmlElements[0].getAttribute(name);
-	    } else {
-	      this.htmlElements[0].setAttribute(name, value);
-	      return;
-	    }
-	  }
-	
-	  addClass(name) {
-	    this.htmlElements.forEach( (htmlElement) => {
-	      name.split(" ").forEach ( (className) => {
-	        htmlElement.classList.add(className);
-	      });
-	    });
-	  }
-	
-	  removeClass(name) {
-	    this.htmlElements.forEach( (htmlElement) => {
-	      htmlElement.classList.remove(name);
-	    });
-	  }
-	
-	  children() {
-	    let childrenCollection = [];
-	    this.htmlElements.forEach( (htmlElement) => {
-	      childrenCollection = childrenCollection.concat(htmlElement.children);
-	    });
-	
-	    return new DOMNodeCollection(childrenCollection);
-	  }
-	
-	  parent() {
-	    const parentCollection = this.htmlElements.map( (htmlElement) => {
-	      return htmlElement.parentElement;
-	    });
-	
-	    return new DOMNodeCollection(parentCollection);
-	  }
-	
-	  find(selector) {
-	    let queryResult = [];
-	    this.htmlElements.forEach( (htmlElement) => {
-	      queryResult = queryResult.concat(htmlElement.querySelectorAll(selector));
-	    });
-	
-	    return new DOMNodeCollection(queryResult);
-	  }
-	
-	  remove() {
-	    this.htmlElements.forEach( (htmlElement) => {
-	      htmlElement.innerHTML = "";
-	      htmlElement.outerHTML = "";
-	    });
-	    return;
-	  }
-	
-	  on(e, cb) {
-	    this.htmlElements.forEach( (htmlElement) => {
-	      htmlElement.addEventListener(e, cb);
-	    });
-	    return;
-	  }
-	
-	  off(e, cb) {
-	    this.htmlElements.forEach( (htmlElement) => {
-	      htmlElement.removeEventListener(e, cb);
-	    });
-	    return;
-	  }
-	
-	  text(textString) {
-	    this.htmlElements.forEach( (htmlElement) => {
-	      htmlElement.textContent = textString;
-	    });
-	    return;
-	  }
-	
-	  get(index) {
-	    return this.htmlElements[index];
-	  }
-	}
-	
-	module.exports = DOMNodeCollection;
 
 
 /***/ }

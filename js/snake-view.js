@@ -2,8 +2,8 @@ const $jo = require('./../joQuery/lib/main');
 const Board = require('./board.js');
 
 class View {
-  constructor() {
-    this.$jo = $jo;
+  constructor($) {
+    this.$jo = $;
     this.initialGameConfig();
     this.eventFunction = this.handleKeyEvent;
     this.keyEvent();
